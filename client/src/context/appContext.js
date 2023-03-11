@@ -61,7 +61,7 @@ const AppProvider = ({ children }) => {
   };
 
   const authFetch = axios.create({
-    baseURL: "http://localhost:5000/",
+    baseURL: "https://stock-prince.onrender.com",
   });
 
   authFetch.interceptors.request.use(
