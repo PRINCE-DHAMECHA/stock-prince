@@ -26,7 +26,6 @@ export default function Register() {
     alertText,
     currentMode,
     currentColor,
-    isLoading,
   } = useAppContext();
   useEffect(() => {
     const t = setTimeout(() => {
