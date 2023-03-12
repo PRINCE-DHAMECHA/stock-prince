@@ -74,12 +74,12 @@ const Tips = () => {
             }}
             className="p-4 flex flex-col justify-center dark:text-white gap-5"
           >
-            <p className="text-2xl font-medium">
+            <p className="text-lg lg:text-2xl font-medium">
               Current Balance: {currentBalance} &#8377;
             </p>
             {!isTipBought ? (
               <div>
-                <p className="text-2xl dark:text-white font-medium m-5">
+                <p className="text-lg lg:text-2xl dark:text-white font-medium m-5">
                   Buy Tip At Just 100 &#8377;
                 </p>
                 <button
