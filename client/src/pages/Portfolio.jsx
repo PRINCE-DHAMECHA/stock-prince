@@ -8,6 +8,7 @@ import { HiOutlineRefresh } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
 import {
   AccumulationChartComponent,
+  AccumulationDataLabel,
   AccumulationLegend,
   AccumulationSeriesCollectionDirective,
   AccumulationSeriesDirective,
@@ -82,6 +83,11 @@ const Portfolio = () => {
         return 0;
       });
     }
+    for (let i = 0; i < chartData.length; i++) {
+      chartData[i].text = ((Number(chartData[i].y) / inv) * 100).toFixed(2);
+      chartData[i].text += "%";
+    }
+    console.log(chartData);
     setDataChart(chartData);
     setPortfolioshare(arr);
     setInvested(inv.toFixed(2));
@@ -216,6 +222,7 @@ const Portfolio = () => {
                       services={[
                         AccumulationLegend,
                         AccumulationTooltip,
+                        AccumulationDataLabel,
                         Export,
                       ]}
                     />
@@ -226,6 +233,11 @@ const Portfolio = () => {
                         yName="y"
                         radius="90%"
                         palettes={palettes}
+                        dataLabel={{
+                          position: "Inside",
+                          visible: true,
+                          name: "text",
+                        }}
                       />
                     </AccumulationSeriesCollectionDirective>
                   </AccumulationChartComponent>

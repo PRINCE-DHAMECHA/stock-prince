@@ -15,8 +15,8 @@ const initialState = {
 
 export default function Register() {
   const navigate = useNavigate();
-  const [myLoading, setmyLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [myLoading, setmyLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const {
     user,
     alertType,
@@ -26,10 +26,11 @@ export default function Register() {
     alertText,
     currentMode,
     currentColor,
+    isLoading,
   } = useAppContext();
   useEffect(() => {
     const t = setTimeout(() => {
-      setmyLoading(false);
+      setLoading(false);
     }, 1000);
     if (user) {
       navigate("/accounts");
@@ -46,12 +47,12 @@ export default function Register() {
     setstate({ ...state, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
-    setLoading(true);
+    setmyLoading(true);
     e.preventDefault();
     const { name, email, password, isMember } = state;
     if (!email || !password || (!isMember && !name)) {
       displayAlert();
-      setLoading(false);
+      setmyLoading(false);
       return;
     }
     const currentUser = { name, email, password };
@@ -68,11 +69,11 @@ export default function Register() {
         alertText: "User Created! Redirecting...",
       });
     }
-    setLoading(false);
+    setmyLoading(false);
   };
   return (
     <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6 text-center  dark:bg-secondary-dark-bg bg-white rounded-3xl">
-      {myLoading ? (
+      {loading ? (
         <div className="w-full p-20">
           <div className="m-auto w-7">
             <RingLoader color={currentColor} className="-ml-5" />
@@ -162,7 +163,7 @@ export default function Register() {
               </div>
 
               <div className="text-center">
-                {loading ? (
+                {myLoading ? (
                   <div className="w-full p-2">
                     <div className="m-auto w-7">
                       <RingLoader color={currentColor} className="-ml-5" />

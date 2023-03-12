@@ -202,7 +202,7 @@ const ApplyLoan = ({ isRepay }) => {
                   border={{ width: 0 }}
                   chartArea={{ border: { width: 0 } }}
                   background="none"
-                  height="400"
+                  className="h-60 lg:h-96"
                   id="charts"
                   primaryXAxis={primaryxAxis}
                   primaryYAxis={primaryyAxis}

@@ -216,7 +216,7 @@ const BuyStock = ({ activeStockName, activeStockId }) => {
                   }}
                   className="xl:w-7/12 w-full text-left flex flex-col justify-center xl:p-10 p-2 gap-4 dark:text-white tracking-wide shadow-xl"
                 >
-                  <div className="flex flex-row gap-2 justify-start items-left text-left xl:text-xl text-lg">
+                  <div className="flex flex-col gap-2 justify-start items-left text-left xl:text-xl text-lg">
                     <p
                       style={{
                         color: TotalchangeInPrice >= 0 ? "#7ced65" : "#fc4e41",
@@ -224,7 +224,7 @@ const BuyStock = ({ activeStockName, activeStockId }) => {
                     >
                       LTP: {ltp} &#8377;
                     </p>
-                    <p className="text-base my-auto">
+                    <p className="text-sm my-auto">
                       {TotalchangeInPrice >= 0 ? "+" : ""}
                       {TotalchangeInPrice} ({" "}
                       {TotalchangeInPrice >= 0 ? "+" : ""}
@@ -369,7 +369,6 @@ const BuyStock = ({ activeStockName, activeStockId }) => {
                 <div className="text-center w-full mt-2 flex flex-wrap flex-col xl:flex-row justify-center gap-2">
                   <div className="w-11/12 dark:text-white mt-10 block  rounded-xl text-left m-auto">
                     <p className="m-auto md:text-2xl text-lg text-center">
-                      Price Chart:
                       {`  ${activeStockName} (${("0" + d1.getDate()).slice(
                         -2
                       )}/${("0" + (d1.getMonth() + 1)).slice(-2)})`}
@@ -379,7 +378,7 @@ const BuyStock = ({ activeStockName, activeStockId }) => {
                         onClick={clickHandler.bind(this)}
                       >
                         <TiExportOutline
-                          fontSize={"20px"}
+                          fontSize={"22px"}
                           color={`${currentColor}`}
                         />
                       </button>
@@ -389,7 +388,7 @@ const BuyStock = ({ activeStockName, activeStockId }) => {
                       chartArea={{ border: { width: 0 } }}
                       tooltip={{ enable: true }}
                       background="none"
-                      height="400"
+                      className="h-60 lg:h-96"
                       id="charts"
                       primaryXAxis={primaryxAxis}
                       primaryYAxis={primaryyAxis}

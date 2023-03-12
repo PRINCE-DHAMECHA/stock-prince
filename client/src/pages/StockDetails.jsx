@@ -239,7 +239,7 @@ const StockDetails = () => {
             <div className="xl:w-8/12 w-10/12 m-auto">
               <div className="flex flex-col md:flex-row justify-evenly dark:text-white mt-8 text-base md:text-xl gap-4">
                 <h1 className="text-2xl">Price Chart</h1>
-                <div className="flex gap-5 md:mt-0 mt-4 justify-center">
+                <div className="flex gap-3 lg:gap-5 md:mt-0 mt-4 justify-center">
                   <button
                     style={{
                       borderLeft: `2px solid ${currentColor}`,
@@ -317,7 +317,7 @@ const StockDetails = () => {
               <div className="w-full m-auto mt-5 dark:text-white block rounded-xl ">
                 <ChartComponent
                   id="charts"
-                  height="360px"
+                  className="h-60 lg:h-96"
                   primaryXAxis={primaryxAxis}
                   primaryYAxis={primaryyAxis}
                   chartArea={{ border: { width: 0 } }}

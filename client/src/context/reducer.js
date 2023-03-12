@@ -33,12 +33,12 @@ const reducer = (state, action) => {
   if (action.type === SETUP_USER_SUCCESS) {
     return {
       ...state,
-      isLoading: true,
       token: action.payload.token,
       user: action.payload.user,
       showAlert: true,
       alertType: "green",
       alertText: action.payload.alertText,
+      isLoading: false,
     };
   }
   if (action.type === SETUP_USER_ERROR) {
