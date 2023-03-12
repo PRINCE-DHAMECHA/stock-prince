@@ -15,7 +15,6 @@ const initialState = {
 
 export default function Register() {
   const navigate = useNavigate();
-  const [myLoading, setmyLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const {
     user,
@@ -26,6 +25,7 @@ export default function Register() {
     alertText,
     currentMode,
     currentColor,
+    isLoading,
   } = useAppContext();
   useEffect(() => {
     const t = setTimeout(() => {
@@ -46,12 +46,10 @@ export default function Register() {
     setstate({ ...state, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
-    setmyLoading(true);
     e.preventDefault();
     const { name, email, password, isMember } = state;
     if (!email || !password || (!isMember && !name)) {
       displayAlert();
-      setmyLoading(false);
       return;
     }
     const currentUser = { name, email, password };
@@ -68,7 +66,6 @@ export default function Register() {
         alertText: "User Created! Redirecting...",
       });
     }
-    setmyLoading(false);
   };
   return (
     <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6 text-center  dark:bg-secondary-dark-bg bg-white rounded-3xl">
@@ -101,17 +98,8 @@ export default function Register() {
                   ? " Sign In To Your Account  "
                   : " Create New Account "}
               </h2>
-              <h2 className="mt-5 text-center text-xl  dark:text-white text-gray-900">
-                {showAlert && (
-                  <div className={`text-${alertType}-400`}>{alertText}</div>
-                )}
-              </h2>
             </div>
-            <form
-              className="mt-8 space-y-6"
-              onSubmit={handleSubmit}
-              method="POST"
-            >
+            <form className="space-y-6" onSubmit={handleSubmit} method="POST">
               <input type="hidden" name="remember" defaultValue="true" />
               <div className="rounded-md shadow-sm">
                 {!state.isMember && (
@@ -162,7 +150,7 @@ export default function Register() {
               </div>
 
               <div className="text-center">
-                {myLoading ? (
+                {isLoading ? (
                   <div className="w-full p-2">
                     <div className="m-auto w-7">
                       <RingLoader color={currentColor} className="-ml-5" />
@@ -184,6 +172,12 @@ export default function Register() {
                   </div>
                 )}
               </div>
+
+              <h2 className="mt-10 text-center text-xl  dark:text-white text-gray-900">
+                {showAlert && (
+                  <div className={`text-${alertType}-400`}>{alertText}</div>
+                )}
+              </h2>
               <div className="flex gap-1 justify-center text-center font-medium text-black dark:text-white">
                 {state.isMember ? " New User?  " : "Already Member? "}
                 <button
