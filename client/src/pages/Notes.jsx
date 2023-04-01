@@ -14,10 +14,14 @@ const Notes = () => {
   const { authFetch, currentColor, user } = useAppContext();
   useEffect(() => {
     setLoading(true);
-    authFetch("loan/getNotes").then((data) => {
-      setNotes(data.data);
-    });
-    setLoading(false);
+    authFetch("loan/getNotes")
+      .then((data) => {
+        setNotes(data.data);
+        setLoading(false);
+      })
+      .catch((e) => {
+        setLoading(false);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [forRender]);
   const handleDelete = async (_id) => {

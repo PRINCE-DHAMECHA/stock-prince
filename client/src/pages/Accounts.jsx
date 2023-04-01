@@ -110,9 +110,9 @@ const Accounts = () => {
       setTipCount(tips);
       setmyData1([allCredits, loanCredits, shareCredits]);
       setmyData2([loanDebits, allDebits, shareDebits]);
+      setLoading(false);
     };
     fetchData();
-    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const primaryXAxis = {
