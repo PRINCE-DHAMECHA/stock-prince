@@ -156,7 +156,7 @@ const Accounts = () => {
             <div className="flex flex-col w-full justify-center">
               <div>
                 <p className="md:text-3xl text-xl mb-2 font-medium dark:text-white m-auto shadow-sm inline p-3">
-                  Current Balance: {currentBalance} &#8377;
+                  Current Balance: {Number(currentBalance).toFixed(2)} &#8377;
                 </p>
               </div>
             </div>

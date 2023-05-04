@@ -75,7 +75,7 @@ const Tips = () => {
             className="p-4 flex flex-col justify-center dark:text-white gap-5"
           >
             <p className="text-lg lg:text-2xl font-medium">
-              Current Balance: {currentBalance} &#8377;
+              Current Balance: {Number(currentBalance).toFixed(2)} &#8377;
             </p>
             {!isTipBought ? (
               <div>

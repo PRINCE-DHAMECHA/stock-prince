@@ -80,7 +80,7 @@ const CreateNote = () => {
               </div>
               <div className="text-center mt-5 text-xl">
                 <p className="block m-auto">
-                  Platform Fees: {principal * 0.005}
+                  Platform Fees: {Number(principal * 0.005).toFixed(2)}
                 </p>
               </div>
             </div>

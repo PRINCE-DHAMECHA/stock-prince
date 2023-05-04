@@ -142,8 +142,10 @@ const Portfolio = () => {
           <div>
             <div className="flex flex-col mb-20">
               <div className="w-full flex xl:flex-row flex-col justify-around px-0 text-center dark:text-white font-semibold md:text-2xl text-lg  mb-10 text-black">
-                <h1 className="">Wallet : {user["balance"]} &#8377;</h1>
-                <h1>Invested : {invested} &#8377;</h1>
+                <h1 className="">
+                  Wallet : {Number(user["balance"]).toFixed(2)} &#8377;
+                </h1>
+                <h1>Invested : {Number(invested).toFixed(2)} &#8377;</h1>
                 <h1 className="flex justify-center text-center">
                   <button onClick={reloadFunc} className="px-1">
                     <HiOutlineRefresh color={currentColor} />
