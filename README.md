@@ -4,7 +4,7 @@
 ### Project Description
 Stock-Prince is a platform designed to help new investors gain confidence and experience in the stock market. It provides a simulated trading environment where users can practice trading with dummy stocks, without the risk of losing real money. In addition, with our innovative direct lending prototype, you can lend and borrow money without banks or middlemen.
 
-One of the key features of SmartStocks is the real-time stock data it provides. Users can view current prices, price charts, and recommendations to help them make informed decisions about their investments. This data is updated in real-time, allowing users to stay up-to-date with market trends and make timely decisions.
+One of the key features of Stock-Prince is the real-time stock data it provides. Users can view current prices, price charts, and recommendations to help them make informed decisions about their investments. This data is updated in real-time, allowing users to stay up-to-date with market trends and make timely decisions.
 
 In addition to stock market data, Stock-Prince also provides recommendations to buy their dream car. This feature helps users plan for their financial goals and make informed decisions about their investments.
 
