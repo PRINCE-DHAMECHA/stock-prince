@@ -1,4 +1,4 @@
-# Stoce-Prince
+# Stock-Prince
 
 
 ### Project Description
