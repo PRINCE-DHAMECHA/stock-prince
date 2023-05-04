@@ -1,7 +1,7 @@
 {
-  "name": "smart_investment",
+  "name": "stockprince",
   "version": "1.0.0",
-  "description": "smart_investment",
+  "description": "Stock Prince",
   "type": "module",
   "main": "index.js",
   "scripts": {

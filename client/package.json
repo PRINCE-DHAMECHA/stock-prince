@@ -1,5 +1,5 @@
 {
-  "name": "project_syncfusion_dashboard",
+  "name": "stockprince",
   "version": "0.1.0",
   "private": true,
   "proxy": "http://localhost:5000/",

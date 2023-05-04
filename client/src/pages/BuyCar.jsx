@@ -9,6 +9,7 @@ const BuyCar = () => {
   const [interest, setInterest] = useState(8.5);
   const [emi, setEmi] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState(false);
   useEffect(() => {
     setLoading(true);
     let tempInt = interest / 12;
@@ -23,6 +24,13 @@ const BuyCar = () => {
   // P x R x (1+R)^N / [(1+R)^N-1]
   const handleChange = () => {
     setLoading(true);
+    console.log(interest, Number(price));
+    if (interest < 0 || Number(price) < 0) {
+      console.log(2222);
+      setErr(true);
+      setLoading(false);
+      return;
+    }
     let tempInt = interest / 12;
     tempInt = tempInt / 100;
     let payments = 48;
@@ -30,6 +38,7 @@ const BuyCar = () => {
     let monthly = (((price * 4) / 5) * x * tempInt) / (x - 1);
     setEmi(monthly);
     setLoading(false);
+    setErr(false);
   };
   return (
     <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2 p-2 md:p-6 dark:bg-secondary-dark-bg bg-white rounded-3xl text-center">
@@ -107,13 +116,14 @@ const BuyCar = () => {
               }}
               className="flex flex-col justify-center text-center lg:w-1/2 lg:text-left text-base lg:text-lg dark:text-white gap-6 p-6 "
             >
+              {err && <p className="text-red-600">Provide Valid Values</p>}
               <p>
-                Your salary need to be minimum <b>{(emi * 10).toFixed(2)}</b>{" "}
-                &#8377;
+                Your salary need to be minimum{" "}
+                <b>{err ? "NA" : (emi * 10).toFixed(2)}</b> &#8377;
               </p>
-              <p>Down Payment: {(Number(price) / 5).toFixed(2)}</p>
-              <p>EMI will be: {Number(emi).toFixed(2)}&#8377;</p>
-              <p>Loan tenure: {4} Years</p>
+              <p>Down Payment: {err ? "NA" : (Number(price) / 5).toFixed(2)}</p>
+              <p>EMI will be: {err ? "NA" : Number(emi).toFixed(2)}&#8377;</p>
+              <p>Loan tenure: {err ? "NA" : 4} Years</p>
             </div>
           </div>
         )}
