@@ -223,7 +223,10 @@ const StockDetails = () => {
               style={{ borderColor: currentColor, borderRadius: "10px" }}
               className="flex flex-col gap-2 dark:text-white m-auto md:text-left p-4 font-semibold text-base md:text-xl border-l-2"
             >
-              <p>Current Price: {about.currentPrice} &#8377;</p>
+              <p>
+                Current Price: {about.currentPrice ? about.currentPrice : "NA"}{" "}
+                &#8377;
+              </p>
               <p>
                 Target High: {about.targetHigh ? about.targetHigh : "NA"}{" "}
                 &#8377;
