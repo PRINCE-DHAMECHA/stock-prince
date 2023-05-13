@@ -3,14 +3,12 @@ import { StatusCodes } from "http-status-codes";
 
 const assetProfile = async (req, res) => {
   const { symbol } = req.body;
-  console.log("hii");
   let obj = {};
   await axios
     .get(
       `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}.ns?modules=assetProfile`
     )
     .then((d) => {
-      console.log(d);
       let data = d?.data?.quoteSummary?.result[0]?.assetProfile;
       obj.address = data?.address1;
       obj.website = data?.website;
@@ -26,7 +24,6 @@ const assetProfile = async (req, res) => {
       `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}.ns?modules=financialData`
     )
     .then((d) => {
-      console.log(d);
       let data = d?.data?.quoteSummary?.result[0]?.financialData;
       obj.currentPrice = data?.currentPrice?.fmt;
       obj.targetHigh = data?.targetHighPrice?.fmt;
