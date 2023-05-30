@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Header, Note } from "../components";
+import { Note } from "../components";
 import { useAppContext } from "../context/appContext";
 import RingLoader from "react-spinners/RingLoader";
+import { VscAdd } from "react-icons/vsc";
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
@@ -44,9 +45,23 @@ const Notes = () => {
     setforRender((prev) => !prev);
   };
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2 p-2 md:p-6 dark:bg-secondary-dark-bg bg-white rounded-3xl text-center">
-      <div className="text-center w-full">
-        <Header title={isMyNotes ? "My Notes" : "All Notes"} />
+    <div>
+      <div className="text-center w-full relative">
+        <div className="mb-10 mt-5 w-full text-center">
+          <p
+            style={{ borderColor: currentColor }}
+            className="lg:text-3xl text-2xl m-auto pb-1 font-bold tracking-normal dark:text-white text-black border-solid border-b-2 lg:w-1/2 w-5/6"
+          >
+            {isMyNotes ? "My Notes" : "All Notes"}
+          </p>
+        </div>
+        {!loading && (
+          <div className="absolute -top-6 right-0 lg:m-2 m-2">
+            <Link to="/createNote">
+              <VscAdd size={"30px"} color={currentColor} className="m-auto" />
+            </Link>
+          </div>
+        )}
         {loading ? (
           <div className="w-full p-20">
             <div className="m-auto w-7">
@@ -55,24 +70,32 @@ const Notes = () => {
           </div>
         ) : (
           <div>
-            <div className="flex justify-center gap-5 mt-10 mb-5">
-              <Link to="/createNote">
-                <button
-                  style={{ background: currentColor }}
-                  className="p-2 px-7 text-xl mb-5 rounded-md text-white"
-                >
-                  Create
-                </button>
-              </Link>
-              <button
-                onClick={() => {
-                  setisMyNotes(!isMyNotes);
-                }}
-                style={{ background: currentColor }}
-                className="flex gap-2 p-2 px-7 text-xl mb-5 rounded-md text-white"
-              >
-                {isMyNotes ? "All Notes" : "My Notes"}
-              </button>
+            <div className="justify-between text-center font-normal flex">
+              <div className="flex gap-4 justify-around dark:text-white text-left m-auto mb-6">
+                <div className="flex flex-col h-12 items-center justify-center overflow-hidden">
+                  <div className="flex justify-center text-center">
+                    <label className="inline-flex relative items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={isMyNotes ? true : false}
+                        readOnly
+                      />
+                      <div
+                        onClick={() => {
+                          setisMyNotes((prev) => !prev);
+                        }}
+                        style={{ background: currentColor }}
+                        className="flex justify-around m-auto w-[102px] h-10 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[3px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-9 after:w-12 after:transition-all text-white"
+                      >
+                        <p className="m-auto">My</p>
+                        <p className="m-auto">All</p>
+                      </div>
+                      <span className="ml-2 text-sm font-medium text-gray-900"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
             </div>
             {!loading && isDisplay && (
               <p
@@ -105,7 +128,7 @@ const Notes = () => {
                 })}
               {!isMyNotes && !notes.length && (
                 <p className="text-xl font-medium dark:text-white">
-                  No Notes Available !!
+                  No Notes Available
                 </p>
               )}
               {isMyNotes &&
@@ -113,7 +136,7 @@ const Notes = () => {
                   return note.lender === user.name;
                 }).length && (
                   <p className="text-xl font-medium dark:text-white">
-                    You Don't Have Any Notes !!
+                    You Don't Have Any Notes
                   </p>
                 )}
             </div>

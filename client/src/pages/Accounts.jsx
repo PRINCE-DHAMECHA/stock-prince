@@ -42,12 +42,12 @@ const Accounts = () => {
       }
       const { data } = await authFetch.get("account/getTransaction");
       setMyTransactios(data);
-      let allCredits = { action: "all", color: "#7ced65" };
-      let allDebits = { action: "all", color: "#fc4e41" };
-      let loanCredits = { action: "loan", color: "#7ced65" };
-      let loanDebits = { action: "loan", color: "#fc4e41" };
-      let shareCredits = { action: "share", color: "#7ced65" };
-      let shareDebits = { action: "share", color: "#fc4e41" };
+      let allCredits = { action: "all", color: "#47D773" };
+      let allDebits = { action: "all", color: "#F87171" };
+      let loanCredits = { action: "loan", color: "#47D773" };
+      let loanDebits = { action: "loan", color: "#F87171" };
+      let shareCredits = { action: "share", color: "#47D773" };
+      let shareDebits = { action: "share", color: "#F87171" };
       let allCreditAmount = 0,
         allDebitAmount = 0,
         shareCreditsAmount = 0,
@@ -142,51 +142,259 @@ const Accounts = () => {
     chartInstance.exportModule.export("PNG", "Transaction Summary");
   }
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6  dark:bg-secondary-dark-bg bg-white rounded-3xl">
-      <div className="flex justify-between flex-wrap text-center">
-        <Header title="Accounts" />
-        {loading ? (
-          <div className="w-full p-20">
-            <div className="m-auto w-7">
-              <RingLoader color={currentColor} className="-ml-5" />
+    <div className="flex justify-between flex-wrap text-center">
+      <Header title="Accounts" />
+      {loading ? (
+        <div className="w-full p-20">
+          <div className="m-auto w-7">
+            <RingLoader color={currentColor} className="-ml-5" />
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col w-full justify-center text-center gap-14">
+          <div className="flex flex-col w-full justify-center">
+            <div>
+              <p
+                style={{
+                  borderLeft: `2px solid ${currentColor}`,
+                  borderRadius: "10px",
+                }}
+                className="md:text-xl text-lg mb-2 font-medium dark:text-white m-auto inline p-3 shadow-lg dark:shadow-gray-600"
+              >
+                Current Balance:{" "}
+                {Number(currentBalance).toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                &#8377;
+              </p>
             </div>
           </div>
-        ) : (
-          <div className="flex flex-col w-full justify-center text-center gap-14">
-            <div className="flex flex-col w-full justify-center">
-              <div>
-                <p className="md:text-3xl text-xl mb-2 font-medium dark:text-white m-auto shadow-sm inline p-3">
-                  Current Balance: {Number(currentBalance).toFixed(2)} &#8377;
+          <div
+            style={{
+              borderBottom: `2px solid ${currentColor}`,
+              borderTop: `2px solid ${currentColor}`,
+              borderRadius: "10px",
+            }}
+            className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
+          >
+            <div className="flex justify-center flex-col">
+              <p
+                style={{ borderBottom: `2px solid ${currentColor}` }}
+                className="inline text-xl md:text-2xl p-2 mb-5 font-medium dark:text-white m-auto"
+              >
+                Stock Transactions
+              </p>
+              <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-lg md:text-xl font-medium">
+                <p
+                  style={{
+                    borderBottom: `2px solid #7ced65`,
+                    borderLeft: `2px solid #7ced65`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Credits:{" "}
+                  {Number(stockCredit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+                <p
+                  style={{
+                    borderBottom: `2px solid #fc4e41`,
+                    borderLeft: `2px solid #fc4e41`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Debits:{" "}
+                  {Number(stockDebit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
                 </p>
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: `2px solid ${currentColor}`,
-                borderTop: `2px solid ${currentColor}`,
-                borderRadius: "10px",
-              }}
-              className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
-            >
-              <div className="flex justify-center flex-col">
-                <p
-                  style={{ borderBottom: `2px solid ${currentColor}` }}
-                  className="inline text-3xl p-2 mb-5 font-medium dark:text-white m-auto"
-                >
-                  Stock Transactions
-                </p>
-                <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-xl font-medium">
-                  <p
-                    style={{
-                      borderBottom: `2px solid #7ced65`,
-                      borderLeft: `2px solid #7ced65`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Credit: {stockCredit} &#8377;
+            <div className="">
+              {noStockTransaction ? (
+                <div>
+                  <p className="text-xl mt-6 dark:text-white m-auto">
+                    You Don't Have Any Stock Transaction
                   </p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap justify-around mt-5 max-h-96 myScroll">
+                  {myTransactios
+                    .filter((item) => item.isStockTransaction)
+                    .map((item) => {
+                      return (
+                        <TransactionCard
+                          key={item._id}
+                          item={item}
+                          userName={userName}
+                          isStockTransaction={true}
+                        />
+                      );
+                    })}
+                </div>
+              )}
+            </div>
+          </div>
+          <div
+            style={{
+              borderBottom: `2px solid ${currentColor}`,
+              borderTop: `2px solid ${currentColor}`,
+              borderRadius: "10px",
+            }}
+            className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
+          >
+            <div className="flex justify-center flex-col">
+              <p
+                style={{ borderBottom: `2px solid ${currentColor}` }}
+                className="inline p-2 text-xl md:text-2xl mb-5 font-medium dark:text-white m-auto"
+              >
+                Loan Transactions
+              </p>
+              <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-lg md:text-xl font-medium">
+                <p
+                  style={{
+                    borderBottom: `2px solid #7ced65`,
+                    borderLeft: `2px solid #7ced65`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Credits:{" "}
+                  {Number(loanCredit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+                <p
+                  style={{
+                    borderBottom: `2px solid #fc4e41`,
+                    borderLeft: `2px solid #fc4e41`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Debits:{" "}
+                  {Number(loanDebit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+              </div>
+            </div>
+            {noLoanTransaction ? (
+              <div>
+                <p className="text-xl mt-6 dark:text-white m-auto">
+                  You Don't Have Any Loan Transaction
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-around mt-10 max-h-96 myScroll">
+                {myTransactios
+
+                  .filter(
+                    (item) =>
+                      !item.isStockTransaction &&
+                      item.receiver !== "Tip Account"
+                  )
+                  .map((item) => {
+                    return (
+                      <TransactionCard
+                        key={item._id}
+                        item={item}
+                        userName={userName}
+                        isStockTransaction={false}
+                      />
+                    );
+                  })}
+              </div>
+            )}
+          </div>
+          <div
+            style={{
+              borderBottom: `2px solid ${currentColor}`,
+              borderTop: `2px solid ${currentColor}`,
+              borderRadius: "10px",
+            }}
+            className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
+          >
+            <div className="flex justify-center flex-col">
+              <p
+                style={{ borderBottom: `2px solid ${currentColor}` }}
+                className="inline p-2 text-xl md:text-2xl mb-5 font-medium dark:text-white m-auto"
+              >
+                Tips Transactions
+              </p>
+              <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-lg md:text-xl font-medium">
+                <p
+                  style={{
+                    borderBottom: `2px solid #fc4e41`,
+                    borderLeft: `2px solid #fc4e41`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Total:{" "}
+                  {Number(100 * tipCount).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+              </div>
+            </div>
+            {tipCount === 0 ? (
+              <div>
+                <p className="text-xl mt-3 dark:text-white m-auto">
+                  WooHoo You Never Buy A Tip!!
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-around mt-10 max-h-96 myScroll">
+                {myTransactios
+                  .filter((item) => item.receiver === "Tip Account")
+                  .map((item) => {
+                    return (
+                      <TransactionCard
+                        key={item._id}
+                        item={item}
+                        userName={userName}
+                        isStockTransaction={false}
+                      />
+                    );
+                  })}
+              </div>
+            )}
+          </div>
+          <div
+            style={{
+              borderBottom: `2px solid ${currentColor}`,
+              borderTop: `2px solid ${currentColor}`,
+              borderRadius: "10px",
+            }}
+            className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
+          >
+            <div className="flex justify-center flex-col">
+              <p
+                style={{ borderBottom: `2px solid ${currentColor}` }}
+                className="inline p-2 text-xl md:text-2xl mb-5 font-medium dark:text-white m-auto"
+              >
+                Tax Paid
+              </p>
+              <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-lg md:text-xl font-medium">
+                {taxes === 0 ? (
+                  <p className="text-xl mt-3 dark:text-white m-auto">
+                    You Didn't Pay Any Taxes !!
+                  </p>
+                ) : (
                   <p
                     style={{
                       borderBottom: `2px solid #fc4e41`,
@@ -196,278 +404,111 @@ const Accounts = () => {
                     }}
                     className="shadow-md"
                   >
-                    Debits: {stockDebit} &#8377;
+                    Total:{" "}
+                    {Number(taxes).toLocaleString("en-IN", {
+                      maximumFractionDigits: 2,
+                    })}{" "}
+                    &#8377;
                   </p>
-                </div>
-              </div>
-              <div className="">
-                {noStockTransaction ? (
-                  <div>
-                    <p className="text-xl mt-6 dark:text-white m-auto">
-                      You Don't Have Any Stock Transaction
-                    </p>
-                  </div>
-                ) : (
-                  <div className="flex flex-wrap justify-around mt-5 max-h-96 myScroll">
-                    {myTransactios
-                      .filter((item) => item.isStockTransaction)
-                      .map((item) => {
-                        return (
-                          <TransactionCard
-                            key={item._id}
-                            item={item}
-                            userName={userName}
-                            isStockTransaction={true}
-                          />
-                        );
-                      })}
-                  </div>
                 )}
               </div>
             </div>
-            <div
-              style={{
-                borderBottom: `2px solid ${currentColor}`,
-                borderTop: `2px solid ${currentColor}`,
-                borderRadius: "10px",
-              }}
-              className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
-            >
-              <div className="flex justify-center flex-col">
-                <p
-                  style={{ borderBottom: `2px solid ${currentColor}` }}
-                  className="inline p-2 text-3xl mb-5 font-medium dark:text-white m-auto"
-                >
-                  Loan Transactions
-                </p>
-                <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-xl font-medium">
-                  <p
-                    style={{
-                      borderBottom: `2px solid #7ced65`,
-                      borderLeft: `2px solid #7ced65`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Credit: {loanCredit} &#8377;
-                  </p>
-                  <p
-                    style={{
-                      borderBottom: `2px solid #fc4e41`,
-                      borderLeft: `2px solid #fc4e41`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Debits: {loanDebit} &#8377;
-                  </p>
-                </div>
-              </div>
-              {noLoanTransaction ? (
-                <div>
-                  <p className="text-xl mt-6 dark:text-white m-auto">
-                    You Don't Have Any Loan Transaction
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-wrap justify-around mt-10 max-h-96 myScroll">
-                  {myTransactios
-
-                    .filter(
-                      (item) =>
-                        !item.isStockTransaction &&
-                        item.receiver !== "Tip Account"
-                    )
-                    .map((item) => {
-                      return (
-                        <TransactionCard
-                          key={item._id}
-                          item={item}
-                          userName={userName}
-                          isStockTransaction={false}
-                        />
-                      );
-                    })}
-                </div>
-              )}
-            </div>
-            <div
-              style={{
-                borderBottom: `2px solid ${currentColor}`,
-                borderTop: `2px solid ${currentColor}`,
-                borderRadius: "10px",
-              }}
-              className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
-            >
-              <div className="flex justify-center flex-col">
-                <p
-                  style={{ borderBottom: `2px solid ${currentColor}` }}
-                  className="inline p-2 text-3xl mb-5 font-medium dark:text-white m-auto"
-                >
-                  Tips Transactions
-                </p>
-                <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-xl font-medium">
-                  <p
-                    style={{
-                      borderBottom: `2px solid #fc4e41`,
-                      borderLeft: `2px solid #fc4e41`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Total: {100 * tipCount} &#8377;
-                  </p>
-                </div>
-              </div>
-              {tipCount === 0 ? (
-                <div>
-                  <p className="text-xl mt-3 dark:text-white m-auto">
-                    WhooHoo You Never Buy A Tip!!
-                  </p>
-                </div>
-              ) : (
-                <div className="flex flex-wrap justify-around mt-10 max-h-96 myScroll">
-                  {myTransactios
-                    .filter((item) => item.receiver === "Tip Account")
-                    .map((item) => {
-                      return (
-                        <TransactionCard
-                          key={item._id}
-                          item={item}
-                          userName={userName}
-                          isStockTransaction={false}
-                        />
-                      );
-                    })}
-                </div>
-              )}
-            </div>
-            <div
-              style={{
-                borderBottom: `2px solid ${currentColor}`,
-                borderTop: `2px solid ${currentColor}`,
-                borderRadius: "10px",
-              }}
-              className="flex flex-col w-full justify-center shadow-lg dark:shadow-gray-600 p-4 py-8"
-            >
-              <div className="flex justify-center flex-col">
-                <p
-                  style={{ borderBottom: `2px solid ${currentColor}` }}
-                  className="inline p-2 text-3xl mb-5 font-medium dark:text-white m-auto"
-                >
-                  Tax Paid
-                </p>
-                <div className="flex lg:flex-row flex-col gap-3 justify-around m-3 my-6 dark:text-white text-xl">
-                  {taxes === 0 ? (
-                    <p className="text-xl mt-3 dark:text-white m-auto">
-                      You Didn't Pay Any Taxes !!
-                    </p>
-                  ) : (
-                    <p
-                      style={{
-                        borderBottom: `2px solid #fc4e41`,
-                        borderLeft: `2px solid #fc4e41`,
-                        padding: "8px",
-                        borderRadius: "10px",
-                      }}
-                      className="shadow-md"
-                    >
-                      Total: {taxes} &#8377;
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div
-              className="w-full shadow-lg dark:shadow-gray-600 p-4 py-12"
-              style={{
-                borderBottom: `2px solid ${currentColor}`,
-                borderTop: `2px solid ${currentColor}`,
-                borderRadius: "10px",
-              }}
-            >
-              <div className="text-center w-full">
-                <p
-                  style={{ borderBottom: `2px solid ${currentColor}` }}
-                  className="inline p-2 text-3xl mb-5 font-medium dark:text-white m-auto"
-                >
-                  Summary
-                  <button
-                    className="pl-2"
-                    value="print"
-                    onClick={clickHandler.bind(this)}
-                  >
-                    <TiExportOutline
-                      fontSize={"20px"}
-                      color={`${currentColor}`}
-                    />
-                  </button>
-                </p>
-                <div className="flex lg:flex-row flex-col gap-3 justify-around m-3  mt-10 dark:text-white text-xl font-medium">
-                  <p
-                    style={{
-                      borderBottom: `2px solid #7ced65`,
-                      borderLeft: `2px solid #7ced65`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Credit: {allCredit} &#8377;
-                  </p>
-                  <p
-                    style={{
-                      borderBottom: `2px solid #fc4e41`,
-                      borderLeft: `2px solid #fc4e41`,
-                      padding: "8px",
-                      borderRadius: "10px",
-                    }}
-                    className="shadow-md"
-                  >
-                    Debits: {allDebit} &#8377;
-                  </p>
-                </div>
-              </div>
-              {(allCredit > 0 || allDebit > 0) && (
-                <div className="dark:text-white mt-10 block w-10/12 rounded-xl text-center m-auto">
-                  <ChartComponent
-                    height="400px"
-                    background="none"
-                    chartArea={{ border: { width: 0 } }}
-                    id="charts"
-                    primaryXAxis={primaryXAxis}
-                    primaryYAxis={primaryYAxis}
-                    ref={(chart) => (chartInstance = chart)}
-                  >
-                    <Inject
-                      services={[ColumnSeries, LineSeries, Category, Export]}
-                    />
-                    <SeriesCollectionDirective>
-                      <SeriesDirective
-                        dataSource={myData1}
-                        xName="action"
-                        type="Column"
-                        yName="amount"
-                        pointColorMapping="color"
-                      />
-                      <SeriesDirective
-                        dataSource={myData2}
-                        xName="action"
-                        type="Column"
-                        yName="amount"
-                        pointColorMapping="color"
-                      />
-                    </SeriesCollectionDirective>
-                  </ChartComponent>
-                </div>
-              )}
-            </div>
           </div>
-        )}
-      </div>
+          <div
+            className="w-full shadow-lg dark:shadow-gray-600 p-4 py-12"
+            style={{
+              borderBottom: `2px solid ${currentColor}`,
+              borderTop: `2px solid ${currentColor}`,
+              borderRadius: "10px",
+            }}
+          >
+            <div className="text-center w-full">
+              <p
+                style={{ borderBottom: `2px solid ${currentColor}` }}
+                className="inline p-2 text-xl md:text-2xl mb-5 font-medium dark:text-white m-auto"
+              >
+                Summary
+                <button
+                  className="pl-2"
+                  value="print"
+                  onClick={clickHandler.bind(this)}
+                >
+                  <TiExportOutline
+                    fontSize={"20px"}
+                    color={`${currentColor}`}
+                  />
+                </button>
+              </p>
+              <div className="flex lg:flex-row flex-col gap-3 justify-around m-3  mt-10 dark:text-white text-lg md:text-xl font-medium">
+                <p
+                  style={{
+                    borderBottom: `2px solid #7ced65`,
+                    borderLeft: `2px solid #7ced65`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Credits:{" "}
+                  {Number(allCredit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+                <p
+                  style={{
+                    borderBottom: `2px solid #fc4e41`,
+                    borderLeft: `2px solid #fc4e41`,
+                    padding: "8px",
+                    borderRadius: "10px",
+                  }}
+                  className="shadow-md"
+                >
+                  Debits:{" "}
+                  {Number(allDebit).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}{" "}
+                  &#8377;
+                </p>
+              </div>
+            </div>
+            {(allCredit > 0 || allDebit > 0) && (
+              <div className="dark:text-white mt-10 block w-11/12 rounded-xl text-center m-auto">
+                <ChartComponent
+                  height="400px"
+                  background="none"
+                  chartArea={{ border: { width: 0 } }}
+                  id="charts"
+                  primaryXAxis={primaryXAxis}
+                  primaryYAxis={primaryYAxis}
+                  ref={(chart) => (chartInstance = chart)}
+                  margin={"auto"}
+                >
+                  <Inject
+                    services={[ColumnSeries, LineSeries, Category, Export]}
+                  />
+                  <SeriesCollectionDirective>
+                    <SeriesDirective
+                      dataSource={myData1}
+                      xName="action"
+                      type="Column"
+                      yName="amount"
+                      pointColorMapping="color"
+                    />
+                    <SeriesDirective
+                      dataSource={myData2}
+                      xName="action"
+                      type="Column"
+                      yName="amount"
+                      pointColorMapping="color"
+                    />
+                  </SeriesCollectionDirective>
+                </ChartComponent>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

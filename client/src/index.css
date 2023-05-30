@@ -9,27 +9,6 @@ body {
   font-family: "IBM Plex Sans", "PT Sans", "Playfair Display", sans-serif;
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.scrollClass::-webkit-scrollbar {
-  width: 4px;
-}
-.scrollClass::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-.scrollClass::-webkit-scrollbar-track {
-  box-shadow: transparent;
-}
-
-.scrollClass::-webkit-scrollbar-thumb {
-  background-color: #3770ff;
-}
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

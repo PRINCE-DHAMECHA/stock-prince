@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { MarketViewData } from "../data/dummy";
 import { MarketViewCard, Header } from "../components";
-import { NavLink } from "react-router-dom";
-import { useAppContext } from "../context/appContext";
 const MarketView = () => {
-  const { currentColor } = useAppContext();
   const [inp, setinp] = useState("");
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6  dark:bg-secondary-dark-bg bg-white rounded-3xl">
-      <div className="flex justify-between flex-wrap">
+    <div>
+      <div className="flex justify-between flex-wrap pb-16">
         <Header title="Market" />
         <div className="m-auto mb-3 w-full xl:w-96">
           <div className="input-group w-full xl:w-96 relative flex flex-wrap items-stretch  mb-4 rounded">
@@ -33,28 +30,6 @@ const MarketView = () => {
             </div>
           );
         })}
-      </div>
-      <div className="m-10 text-center flex justify-center gap-8">
-        <NavLink
-          style={{
-            backgroundColor: currentColor,
-            borderRadius: "10px",
-          }}
-          to="/portfolio"
-          className={`text-xl text-white px-6 py-2 hover:drop-shadow-xl `}
-        >
-          Trade
-        </NavLink>
-        <NavLink
-          style={{
-            backgroundColor: currentColor,
-            borderRadius: "10px",
-          }}
-          to="/themepicker"
-          className={`text-xl text-white px-6 py-2 hover:drop-shadow-xl `}
-        >
-          Themes
-        </NavLink>
       </div>
     </div>
   );

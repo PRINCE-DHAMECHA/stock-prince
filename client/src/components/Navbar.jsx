@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMenu, AiOutlineUser } from "react-icons/ai";
 import { useAppContext } from "../context/appContext";
 import { NavLink } from "react-router-dom";
+import SetTheme from "./SetTheme";
 
 const NavButton = ({ cunstomFunc, icon, color }) => (
   <button
@@ -45,7 +46,7 @@ const Navbar = () => {
   const name = window.localStorage.getItem("name");
   return (
     <div className="dark:bg-main-dark-bg">
-      <div className="flex justify-between p-3 md:mx-6 relative">
+      <div className="flex justify-between py-1 px-3 md:py-3 md:mx-6 relative">
         <NavButton
           cunstomFunc={() => {
             setActiveMenu((prev) => !prev);
@@ -55,7 +56,7 @@ const Navbar = () => {
         ></NavButton>
         {user ? (
           <div className="flex">
-            <div className="flex items-center flex-row gap-2 p-1  rounded-lg">
+            <div className="flex items-center flex-row gap-2 p-1 mt-0  rounded-lg">
               <NavLink to="/portfolio" className="flex flex-row text-lg mr-1">
                 <span className="text-black dark:text-white ">
                   <AiOutlineUser size={"30px"} />
@@ -78,20 +79,23 @@ const Navbar = () => {
               >
                 {myText}
               </button>
+              <SetTheme />
             </div>
           </div>
         ) : (
-          <NavLink to="/portfolio" className="flex text-lg mr-1 gap-3">
-            <button
-              type="button"
-              style={{ backgroundColor: currentColor, borderRadius: "10px" }}
-              className={
-                "py-1 mt-2 px-5 hover:drop-shadow-xl text-white flex justify-center gap-2"
-              }
+          <div className="flex items-center flex-row gap-2 p-1 mt-0 rounded-lg">
+            <NavLink
+              to="/portfolio"
+              style={{
+                backgroundColor: currentColor,
+                borderRadius: "10px",
+              }}
+              className={`text-lg text-white px-4 py-1 hover:drop-shadow-xl `}
             >
               <span>Login</span>
-            </button>
-          </NavLink>
+            </NavLink>
+            <SetTheme />
+          </div>
         )}
       </div>
     </div>

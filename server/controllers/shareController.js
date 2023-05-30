@@ -252,7 +252,6 @@ const getOneShare = async (req, res) => {
       res.status(StatusCodes.OK).json({ msg: "You Don't Own This Stock" });
     }
   } catch (e) {
-    console.log(e);
     throw new BadRequestError(e);
   }
 };

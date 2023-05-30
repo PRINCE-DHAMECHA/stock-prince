@@ -5,6 +5,7 @@ import {
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
   LOGOUT_USER,
+  DISPLAY_PASS_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -15,7 +16,15 @@ const reducer = (state, action) => {
       ...state,
       showAlert: true,
       alertType: "red",
-      alertText: "Please provide all values!",
+      alertText: "Please Provide All Values",
+    };
+  }
+  if (action.type === DISPLAY_PASS_ERROR) {
+    return {
+      ...state,
+      showAlert: true,
+      alertType: "red",
+      alertText: "Password Must Be at least 6 Characters Long",
     };
   }
   if (action.type === CLEAR_ALERT) {

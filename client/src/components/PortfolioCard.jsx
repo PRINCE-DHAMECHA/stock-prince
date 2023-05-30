@@ -48,13 +48,12 @@ const MarketViewCard = ({ stockname, k, quantity, buyPrice, buyTime }) => {
   return (
     <div
       style={{
-        // background: `linear-gradient(120deg,${rgba2} 20%,${rgba1})`,
         borderLeft: `4px solid ${currentColor}`,
       }}
       className="rounded-lg border border-gray-100 cursor-pointer shadow-sm dark:shadow-md dark:bg-[#3d4249] dark:border-gray-700 dark:hover:shadow-xl hover:shadow-md"
     >
       <div className="p-3">
-        <div className="flex justify-between md:px-1 md:pt-2  m-auto">
+        <div className="flex justify-between pl-1 md:pt-2  m-auto">
           <div className="flex flex-row items-center justify-center">
             <span className="md:text-xl md:font font-semibold tracking-tight text-gray-900 dark:text-white">
               {stockname}
@@ -91,9 +90,9 @@ const MarketViewCard = ({ stockname, k, quantity, buyPrice, buyTime }) => {
                 ? { color: "#00b700" }
                 : { color: "#fc4e41" }
             }
-            className="md:text-2xl  text-xl font-normal tracking-wide "
+            className="md:text-xl text-lg font-normal tracking-wide"
           >
-            {ltp}&#8377;
+            {ltp.toLocaleString("en-IN", { maximumFractionDigits: 2 })}&#8377;
           </p>
         </div>
         <div className="flex justify-between text-center">
@@ -104,7 +103,7 @@ const MarketViewCard = ({ stockname, k, quantity, buyPrice, buyTime }) => {
                 ? { background: currentColor }
                 : { background: currentColor }
             }
-            className="flex items-center md:mt-4 mt-4 px-4 py-0 md:px-4 text-sm text-md text-center rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-80 text-white font-light tracking-widest hover:skew-x-2"
+            className="flex items-center mt-3 mb-2 py-0 md:px-4 px-3 text-sm text-md text-center rounded-lg  focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-80 text-white font-light tracking-widest hover:skew-x-2"
           >
             Buy / Sell
           </Link>
@@ -132,7 +131,9 @@ const MarketViewCard = ({ stockname, k, quantity, buyPrice, buyTime }) => {
               )}
             </div>
             <span className="md:text-base text-sm text-right  text-gray-900 dark:text-white">
-              Avg : {buyPrice.toFixed(2)}
+              Avg :{" "}
+              {buyPrice.toLocaleString("en-IN", { maximumFractionDigits: 2 })}
+              &#8377;
             </span>
             <div className="flex flex-row justify-center">
               <span className="md:mb-3 text-right md:text-base text-sm  text-gray-900 dark:text-white">

@@ -6,15 +6,18 @@ const register = async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
-    throw new BadRequestError("please provide all values");
+    throw new UnAuthenticatedError("Provide Valid Values");
   }
-  const userAlreadyExists1 = await User.findOne({ email });
-  if (userAlreadyExists1) {
-    throw new BadRequestError("Email already in use");
+  if (password.length <= 5) {
+    throw new BadRequestError("Password Must Be at least 6 Characters Long");
+  }
+  const userAlreadyExists = await User.findOne({ email });
+  if (userAlreadyExists) {
+    throw new UnAuthenticatedError("Email Already Exist");
   }
   const userAlreadyExists2 = await User.findOne({ name });
   if (userAlreadyExists2) {
-    throw new BadRequestError("Name already in use");
+    throw new UnAuthenticatedError("Username Already Taken");
   }
   try {
     const user = await User.create({ name, email, password });
@@ -34,7 +37,7 @@ const login = async (req, res) => {
   }
   const user = await User.findOne({ email }).select("+password");
   if (!user) {
-    throw new UnAuthenticatedError("This Email Does Not Exist");
+    throw new UnAuthenticatedError("Email Does Not Exist");
   }
 
   const isPasswordCorrect = await user.comparePassword(password);

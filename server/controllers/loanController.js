@@ -25,7 +25,6 @@ const createNote = async (req, res) => {
       user1,
     });
   } catch (e) {
-    console.log(e);
     throw new BadRequestError("Something Went Wrong :(");
   }
 };
@@ -143,7 +142,6 @@ const grantLoan = async (req, res) => {
     res.status(StatusCodes.ACCEPTED).json(transaction);
   } catch {
     (e) => {
-      console.log(e);
       throw new BadRequestError("Something Went Wrong :(");
     };
   }
@@ -155,7 +153,6 @@ const getMyGivings = async (req, res) => {
     const loans = await Loan.find({ lender: lender.name });
     res.status(StatusCodes.ACCEPTED).json(loans);
   } catch (e) {
-    console.log(e);
     throw new BadRequestError("Something Went Wrong :(");
   }
 };
@@ -197,14 +194,12 @@ const deleteMynote = async (req, res) => {
     const note = await giversNote.findOne({ _id });
     checkUser(req.user, note.createdBy);
   } catch (e) {
-    console.log(e);
     throw new BadRequestError("Something Went Wrong!!");
   }
   try {
     const noteRemoved = await giversNote.findByIdAndRemove({ _id });
     res.status(StatusCodes.ACCEPTED).json("Note Deleted Successfully");
   } catch (e) {
-    console.log(e);
     throw new BadRequestError("Something Went Wrong!!");
   }
 };

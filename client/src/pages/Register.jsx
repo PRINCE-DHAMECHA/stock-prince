@@ -1,5 +1,5 @@
-import logoLight from "../utils/img/logo.jpg";
-import logoDark from "../utils/img/logodark.jpg";
+import logoLight from "../utils/img/logoLight.jpg";
+import logoDark from "../utils/img/logoDark.jpg";
 import { useAppContext } from "../context/appContext";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -21,6 +21,7 @@ export default function Register() {
     alertType,
     showAlert,
     displayAlert,
+    displayPassAlert,
     setupUser,
     alertText,
     currentMode,
@@ -32,7 +33,7 @@ export default function Register() {
       setLoading(false);
     }, 1000);
     if (user) {
-      navigate("/accounts");
+      navigate("/stockHome");
     }
     return () => {
       clearTimeout(t);
@@ -52,6 +53,10 @@ export default function Register() {
       displayAlert();
       return;
     }
+    if (password.length <= 5) {
+      displayPassAlert();
+      return;
+    }
     const currentUser = { name, email, password };
     if (isMember) {
       setupUser({
@@ -68,7 +73,7 @@ export default function Register() {
     }
   };
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6 text-center  dark:bg-secondary-dark-bg bg-white rounded-3xl">
+    <div>
       {loading ? (
         <div className="w-full p-20">
           <div className="m-auto w-7">
@@ -77,14 +82,14 @@ export default function Register() {
         </div>
       ) : (
         <div className="flex justify-center flex-wrap text-center">
-          <Link to="/landing">
+          <Link className="w-full" to="/landing">
             <img
               src={currentMode === "Dark" ? logoDark : logoLight}
               alt="Logo"
-              className="m-auto mt-5 w-2/3 md:w-3/12 h-auto"
+              className="m-auto mt-3 w-2/5 md:w-2/12 h-auto"
             ></img>
           </Link>
-          <div className="max-w-sm w-full space-y-8">
+          <div className="max-w-sm w-full space-y-6">
             <div>
               <h2
                 style={{
@@ -92,7 +97,7 @@ export default function Register() {
                   borderBottom: `2px solid ${currentColor}`,
                   borderRadius: "10px",
                 }}
-                className="mt-8 p-1 py-2 text-center text-2xl font-medium dark:text-white text-gray-900"
+                className="mt-3 p-1 py-2 text-center text-2xl font-medium dark:text-white text-gray-900"
               >
                 {state.isMember
                   ? " Sign In To Your Account  "
@@ -115,7 +120,7 @@ export default function Register() {
                       className={
                         "appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-[#3d4249] dark:text-white focus:z-10 sm:text-md dark:placeholder-white dark:border-slate-500 dark:focus:border-gray-300"
                       }
-                      placeholder="Name"
+                      placeholder="Username"
                     />
                   </div>
                 )}

@@ -10,7 +10,7 @@ const CreateNote = () => {
   const [principal, setPrincipal] = useState(1000);
   const [interest, setInterest] = useState(6);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [err, setErr] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,18 +21,16 @@ const CreateNote = () => {
         principal: principal,
         interest: interest,
       });
-      setMessage("Note Created!!");
+      setErr(false);
       setLoading(false);
       navigate("/notes");
     } catch (error) {
-      console.log(error);
-      setMessage("Some Thing Went Wrong!!");
-      console.log(message);
+      setErr(true);
       setLoading(false);
     }
   };
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2  p-2 md:p-6  dark:bg-secondary-dark-bg rounded-3xl">
+    <div>
       <div className="flex justify-between text-center flex-wrap flex-col">
         <Header title="Create Note" />
         {loading && (
@@ -42,14 +40,20 @@ const CreateNote = () => {
             </div>
           </div>
         )}
-        <div className="max-w-sm -mt-7 w-full space-y-8 m-auto">
+        <div
+          style={{
+            borderLeft: `2px solid ${currentColor}`,
+            borderRadius: "10px",
+          }}
+          className="max-w-sm w-full space-y-8 m-auto shadow-lg dark:shadow-gray-600s px-8 mt-4"
+        >
           <form
             className="mt-8 space-y-6"
             onSubmit={handleSubmit}
-            method="POST"
+            method="post"
           >
             <input type="hidden" name="remember" defaultValue="true" />
-            <div className="rounded-md shadow-sm dark:text-white text-left">
+            <div className="rounded-md dark:text-white text-left">
               <div className="mb-10 mt-10">
                 <p className="pb-5 text-lg">Enter Principal</p>
                 <input
@@ -80,13 +84,22 @@ const CreateNote = () => {
               </div>
               <div className="text-center mt-5 text-xl">
                 <p className="block m-auto">
-                  Platform Fees: {Number(principal * 0.005).toFixed(2)}
+                  Platform Fees:{" "}
+                  {principal < 100000
+                    ? Math.max(
+                        (principal * 0.005).toLocaleString("en-IN", {
+                          maximumFractionDigits: 2,
+                        }),
+                        0
+                      )
+                    : 500}
+                  &#8377;
                 </p>
               </div>
             </div>
 
             <div className="text-center">
-              <div className="flex justify-center gap-5 mt-10 mb-5">
+              <div className="flex justify-center gap-5 mt-5 mb-5">
                 <button
                   type="submit"
                   onSubmit={handleSubmit}
@@ -98,20 +111,8 @@ const CreateNote = () => {
                 >
                   Create
                 </button>
-                <Link to="/notes">
-                  <button
-                    type="submit"
-                    onSubmit={handleSubmit}
-                    style={{
-                      backgroundColor: currentColor,
-                      borderRadius: "10px",
-                    }}
-                    className={`text-md text-white p-3 hover:drop-shadow-xl `}
-                  >
-                    Back
-                  </button>
-                </Link>
               </div>
+              {err && <p className="text-red-500">{"Something Went Wrong"}</p>}
             </div>
           </form>
         </div>

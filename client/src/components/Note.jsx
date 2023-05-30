@@ -27,13 +27,25 @@ const Note = ({ note, handleFunc }) => {
               borderLeft: `4px solid ${currentColor}`,
             }}
           >
-            <div className="flex text-center justify-around  dark:text-white font-medium md:text-lg text-base tracking-wide">
+            <div className="flex text-center justify-around  dark:text-white font-medium md:text-lg text-sm tracking-wide">
               <div className="text-left w-4/5">
                 <div>
                   <p>Lender: {note.lender}</p>
                 </div>
-                <div>Amount: {note.principal}rs</div>
-                <div>Interest: {note.interest}%</div>
+                <div>
+                  Amount:{" "}
+                  {Number(note.principal).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}
+                  &#8377;
+                </div>
+                <div>
+                  Interest:{" "}
+                  {Number(note.interest).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}
+                  %
+                </div>
               </div>
               <div className="m-auto">
                 <div className="m-auto">
@@ -54,9 +66,9 @@ const Note = ({ note, handleFunc }) => {
                     <button
                       onClick={handleDelete}
                       style={{
-                        background: "#fc4e41",
+                        background: "#fb5c5c",
                       }}
-                      className="p-2 px-5 rounded-md text-white"
+                      className="p-2 py-[6px] px-5 rounded-md text-white"
                     >
                       Delete
                     </button>

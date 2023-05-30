@@ -12,7 +12,9 @@
     z-index: 10000000;
   }
 }
-
+.sidebar {
+  z-index: 10005;
+}
 .fade-in {
   transition: opacity 3s ease;
 }
@@ -35,6 +37,61 @@
 }
 ::-webkit-scrollbar-track {
   background-color: transparent;
+}
+
+.scrollClass::-webkit-scrollbar {
+  width: 3px;
+}
+.scrollClass::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrollClass::-webkit-scrollbar-track {
+  box-shadow: transparent;
+}
+
+.scrollClass::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+}
+.scrollClass2::-webkit-scrollbar {
+  display: none;
+}
+.scrollClass2::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.scrollClass2::-webkit-scrollbar-track {
+  box-shadow: transparent;
+}
+
+.scrollClass2::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+}
+
+.myScroll {
+  overflow: scroll;
+}
+
+.myScroll::-webkit-scrollbar {
+  width: 1px;
+}
+
+.myScroll::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.myScroll::-webkit-scrollbar-track {
+  box-shadow: transparent;
+}
+
+.myScroll::-webkit-scrollbar-thumb {
+  background-color: rgb(139, 139, 139);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* color-picker style  */
@@ -60,24 +117,4 @@
 .e-input-group.e-control-wrapper.e-warning:not(.e-float-icon-left),
 .e-input-group.e-control-wrapper.e-error:not(.e-float-icon-left) {
   border: none;
-}
-
-.myScroll {
-  overflow: scroll;
-}
-
-.myScroll::-webkit-scrollbar {
-  width: 4px;
-}
-
-.myScroll::-webkit-scrollbar-corner {
-  background: transparent;
-}
-
-.myScroll::-webkit-scrollbar-track {
-  box-shadow: transparent;
-}
-
-.myScroll::-webkit-scrollbar-thumb {
-  background-color: rgb(139, 139, 139);
 }

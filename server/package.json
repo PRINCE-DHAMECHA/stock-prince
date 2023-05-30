@@ -1,7 +1,7 @@
 {
-  "name": "stockprince",
+  "name": "stockprince-server",
   "version": "1.0.0",
-  "description": "Stock Prince",
+  "description": "stockprince-server",
   "type": "module",
   "main": "index.js",
   "scripts": {

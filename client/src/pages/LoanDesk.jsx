@@ -42,121 +42,106 @@ const LoanDesk = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2 p-2 md:p-6 dark:bg-secondary-dark-bg bg-white rounded-3xl text-center">
-      <div className="text-center w-full">
-        <Header title="Loan Desk" />
-        {loading && (
-          <div className="w-full mb-5">
-            <div className="m-auto w-7">
-              <RingLoader color={currentColor} className="-ml-5" />
-            </div>
+    <div>
+      <Header title="Loan Desk" />
+      {loading && (
+        <div className="w-full mb-5">
+          <div className="m-auto w-7">
+            <RingLoader color={currentColor} className="-ml-5" />
           </div>
-        )}
-        {!loading && (
+        </div>
+      )}
+      {!loading && (
+        <div>
+          <div className="flex dark:text-white flex-col justify-around flex-wrap xl:flex-row font-semibold md:text-xl text-lg">
+            <p className="w-64 block m-auto py-0.5">
+              Wallet:{" "}
+              {user.balance.toLocaleString("en-IN", {
+                maximumFractionDigits: 2,
+              })}{" "}
+              &#8377;
+            </p>
+            <p className="w-60 block m-auto py-0.5">
+              Givings:{" "}
+              <span style={{ color: "#00b700" }}>
+                {user.givings.toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                &#8377;
+              </span>
+            </p>
+            <p className="w-60 block m-auto py-0.5">
+              Debt:{" "}
+              <span style={{ color: "#fc4e41" }}>
+                {user.borrowings.toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                &#8377;
+              </span>
+            </p>
+          </div>
           <div>
-            <div className="flex dark:text-white flex-col justify-around flex-wrap xl:flex-row font-semibold md:text-xl text-lg">
-              <p className="w-64 block m-auto py-0.5">
-                Balance: {Number(user.balance).toFixed(2)} &#8377;
-              </p>
-              <p className="w-60 block m-auto py-0.5">
-                Givings:{" "}
-                <span style={{ color: "#00ff11" }}>
-                  {Number(user.givings).toFixed(2)} &#8377;
-                </span>
-              </p>
-              <p className="w-60 block m-auto py-0.5">
-                Debt:{" "}
-                <span style={{ color: "#ff0d00" }}>
-                  {Number(user.borrowings).toFixed(2)} &#8377;
-                </span>
-              </p>
+            <div className="flex justify-center gap-5 mt-10 mb-5">
+              <button
+                onClick={() => setIsBorrow(false)}
+                style={{
+                  borderLeft: `2px solid ${currentColor}`,
+                  background: !isBorrow ? currentColor : "",
+                  color: !isBorrow ? "white" : "",
+                }}
+                className="p-2 px-7 lg:text-xl mb-5 rounded-md dark:text-white shadow-md dark:shadow-gray-600"
+              >
+                My Givings
+              </button>
+              <button
+                onClick={() => setIsBorrow(true)}
+                style={{
+                  borderLeft: `2px solid ${currentColor}`,
+                  background: isBorrow ? currentColor : "",
+                  color: isBorrow ? "white" : "",
+                }}
+                className="p-2 px-7 lg:text-xl mb-5 rounded-md dark:text-white shadow-md dark:shadow-gray-600"
+              >
+                My Borrowings
+              </button>
             </div>
-            <div>
-              <div className="flex justify-center gap-5 mt-10 mb-5">
-                <button
-                  onClick={() => setIsBorrow(false)}
-                  style={{
-                    borderLeft: `2px solid ${currentColor}`,
-                    background: !isBorrow ? currentColor : "",
-                    color: !isBorrow ? "white" : "",
-                  }}
-                  className="p-2 px-7 lg:text-xl mb-5 rounded-md dark:text-white"
-                >
-                  My Givings
-                </button>
-                <button
-                  onClick={() => setIsBorrow(true)}
-                  style={{
-                    borderLeft: `2px solid ${currentColor}`,
-                    background: isBorrow ? currentColor : "",
-                    color: isBorrow ? "white" : "",
-                  }}
-                  className="p-2 px-7 lg:text-xl mb-5 rounded-md dark:text-white"
-                >
-                  My Borrowings
-                </button>
-              </div>
-            </div>
-            {isBorrow && (
-              <div className="flex flex-wrap justify-center items-center gap-3 mx-1">
-                {myBorrowings.length ? (
-                  myBorrowings.map((data) => {
-                    return (
-                      <div style={{ width: "28rem" }} key={data._id}>
-                        <DeskCard data={data} isBorrow={true} />
-                      </div>
-                    );
-                  })
-                ) : (
-                  <h1
-                    style={{
-                      borderLeft: "2px solid",
-                      borderColor: currentColor,
-                      borderRadius: "10px",
-                    }}
-                    className="p-2 dark:text-white text-xl"
-                  >
-                    You Don't Have Any Loan Due
-                  </h1>
-                )}
-              </div>
-            )}
-            {!isBorrow && (
-              <div className="flex flex-wrap justify-center items-center gap-3 mx-1">
-                {myGivings.length ? (
-                  myGivings.map((data) => {
-                    return (
-                      <div style={{ width: "28rem" }} key={data._id}>
-                        <DeskCard data={data} isBorrow={false} />
-                      </div>
-                    );
-                  })
-                ) : (
-                  <h1
-                    style={{
-                      borderLeft: "2px solid",
-                      borderColor: currentColor,
-                      borderRadius: "10px",
-                    }}
-                    className="p-2 dark:text-white text-xl"
-                  >
-                    No One Owe You A Loan
-                  </h1>
-                )}
-              </div>
-            )}
-            {/* <div className="flex m-2 flex-col gap-2 mt-5">
-              <p className="text-xl font-bold">Tip For Repay Loan Quickly</p>
-              <p>Buy: {MarketViewData[currentBuy.stockIndex].stockName} </p>
-              <p>current price: {currentBuy["currentPrice"]}</p>
-              <p>Target high: {currentBuy["maxPrice"]}</p>
-              <p>
-                Possible Gain: {(currentBuy["possibleGain"] * 100).toFixed(2)}%
-              </p>
-            </div> */}
           </div>
-        )}
-      </div>
+          {isBorrow && (
+            <div className="flex flex-wrap justify-center items-center gap-3 mx-1">
+              {myBorrowings.length ? (
+                myBorrowings.map((data) => {
+                  return (
+                    <div style={{ width: "28rem" }} key={data._id}>
+                      <DeskCard data={data} isBorrow={true} />
+                    </div>
+                  );
+                })
+              ) : (
+                <h1 className="p-2 dark:text-white text-xl">
+                  You Don't Have Any Loan Due
+                </h1>
+              )}
+            </div>
+          )}
+          {!isBorrow && (
+            <div className="flex flex-wrap justify-center items-center gap-3 mx-1">
+              {myGivings.length ? (
+                myGivings.map((data) => {
+                  return (
+                    <div style={{ width: "28rem" }} key={data._id}>
+                      <DeskCard data={data} isBorrow={false} />
+                    </div>
+                  );
+                })
+              ) : (
+                <h1 className="p-2 dark:text-white text-xl">
+                  No One Owe You A Loan
+                </h1>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

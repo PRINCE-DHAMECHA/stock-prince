@@ -9,6 +9,7 @@ import {
   SETUP_USER_SUCCESS,
   SETUP_USER_ERROR,
   LOGOUT_USER,
+  DISPLAY_PASS_ERROR,
 } from "./actions";
 
 const token = localStorage.getItem("token");
@@ -41,9 +42,10 @@ const AppProvider = ({ children }) => {
   const [activeStockId, setactiveStockId] = useState(null);
   const [activeStockName, setactiveStockName] = useState(null);
   const [activeLoan, setActiveLoan] = useState(null);
-  const setMode = (e) => {
-    setCurrentMode(e.target.value);
-    localStorage.setItem("themeMode", e.target.value);
+  const setMode = () => {
+    const newMode = currentMode === "Light" ? "Dark" : "Light";
+    setCurrentMode(newMode);
+    localStorage.setItem("themeMode", newMode);
     setThemeSettings(false);
   };
   const setLoan = (data, outstanding, date) => {
@@ -61,7 +63,7 @@ const AppProvider = ({ children }) => {
   };
 
   const authFetch = axios.create({
-    baseURL: "https://stock-prince.onrender.com",
+    baseURL: "http://localhost:5000/",
   });
 
   authFetch.interceptors.request.use(
@@ -87,6 +89,10 @@ const AppProvider = ({ children }) => {
 
   const displayAlert = () => {
     dispatch({ type: DISPLAY_ALERT });
+    clearAlert();
+  };
+  const displayPassAlert = () => {
+    dispatch({ type: DISPLAY_PASS_ERROR });
     clearAlert();
   };
 
@@ -137,6 +143,7 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         displayAlert,
+        displayPassAlert,
         setupUser,
         logoutUser,
         authFetch,

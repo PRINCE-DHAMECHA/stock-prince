@@ -70,7 +70,7 @@ const MarketViewCard = ({ stockname, k }) => {
             }
             className="md:text-2xl  text-xl font-normal tracking-wide "
           >
-            {ltp} &#8377;
+            {ltp.toLocaleString("en-IN")} &#8377;
           </p>
         </div>
         <div className="flex justify-between text-center">
@@ -87,8 +87,9 @@ const MarketViewCard = ({ stockname, k }) => {
           </Link>
           <span className="mb-5 pr-1 md:text-base text-sm  text-gray-900 dark:text-white">
             {TotalchangeInPrice >= 0 ? "+" : ""}
-            {TotalchangeInPrice} ( {TotalchangeInPrice >= 0 ? "+" : ""}
-            {PerChangeInPrice}% )
+            {TotalchangeInPrice.toLocaleString("en")} ({" "}
+            {TotalchangeInPrice >= 0 ? "+" : ""}
+            {PerChangeInPrice.toLocaleString("en-IN")}% )
           </span>
         </div>
       </div>

@@ -16,8 +16,9 @@ import StockDetails from "./pages/StockDetails";
 import Accounts from "./pages/Accounts";
 import Tips from "./pages/Tips";
 import Validator from "./pages/Validator";
-import BuyCar from "./pages/BuyCar";
-
+import Watchlist from "./pages/Watchlist";
+import News from "./pages/News";
+import NewsLine from "./components/NewsLine";
 function App() {
   const { currentMode } = useAppContext();
   return (
@@ -30,9 +31,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/ThemePicker" element={<ColorPicker />}></Route>
             <Route path="/stockHome" element={<Stocks />}></Route>
-            <Route path="/buyCar" element={<BuyCar />}></Route>
+            <Route path="/news" element={<News />}></Route>
             <Route
-              path="/stockDetails/:name/:sym"
+              path="/stockDetails/:exc/:name/:sym"
               element={<StockDetails />}
             ></Route>
           </Route>
@@ -45,6 +46,7 @@ function App() {
             }
           >
             <Route element={<Portfolio />}></Route>
+            <Route path="watchlist" element={<Watchlist />}></Route>
             <Route path="marketView" element={<MarketView />}></Route>
             <Route
               path="buyStock/:stockName/:id"
@@ -70,6 +72,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <NewsLine />
     </div>
   );
 }

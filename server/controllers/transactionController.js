@@ -33,7 +33,6 @@ const pay = async (req, res) => {
     });
     res.status(StatusCodes.OK).json("Payment Done!!");
   } catch (error) {
-    console.log(error);
     throw new BadRequestError("Something Went Wrong :(");
   }
 };

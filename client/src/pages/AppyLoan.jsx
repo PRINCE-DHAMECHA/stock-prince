@@ -119,7 +119,7 @@ const ApplyLoan = ({ isRepay }) => {
     chartInstance.exportModule.export("PNG", `Future Outstandings`);
   }
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 mx-2 md:mx-9 p-2 pb-10 md:p-10 dark:bg-secondary-dark-bg bg-white rounded-3xl">
+    <div className="m-2 my-16 md:mt-2 mx-2 md:mx-9 p-2 pb-10 md:p-10 dark:bg-secondary-dark-bg bg-white rounded-3xl">
       <Header
         category="App"
         title={isRepay ? "Repay Loan" : "Apply For A Loan"}
@@ -145,16 +145,38 @@ const ApplyLoan = ({ isRepay }) => {
               borderLeft: `2px solid ${currentColor}`,
               borderRadius: "10px",
             }}
-            className="flex flex-row gap-10 justify-center text-left lg:w-2/3 w-full m-auto p-6"
+            className="flex flex-row gap-10 justify-center text-left lg:w-2/3 w-full m-auto p-6 shadow-md dark:shadow-gray-600"
           >
             <div className="w-9/12">
               <p>Lender : {lender?.toUpperCase()}</p>
-              <p>Amount : {principal}rs</p>
-              <p>Interest : {interest}%</p>
+              <p>
+                Amount :{" "}
+                {Number(principal).toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                })}
+                &#8377;
+              </p>
+              <p>
+                Interest :{" "}
+                {Number(interest).toLocaleString("en-IN", {
+                  maximumFractionDigits: 2,
+                })}
+                %
+              </p>
               {isRepay ? (
-                <p>Outstanding: {outstanding}</p>
+                <p>
+                  Outstanding:{" "}
+                  {Number(outstanding).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
               ) : (
-                <p>Platform Fees: {(principal * 0.005).toFixed(2)}</p>
+                <p>
+                  Platform Fees:{" "}
+                  {(principal * 0.005).toLocaleString("en-IN", {
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
               )}
               {isRepay && (
                 <p>
@@ -169,7 +191,7 @@ const ApplyLoan = ({ isRepay }) => {
                     background: currentColor,
                   }}
                   onClick={isRepay ? handleRepay : handleSubmit}
-                  className="p-2 px-5 rounded-md text-white"
+                  className="p-[6px] px-5 rounded-md text-white"
                 >
                   {isRepay ? "Repay" : "Apply"}
                 </button>

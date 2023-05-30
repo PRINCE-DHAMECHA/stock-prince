@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Header } from "../components";
 import { useAppContext } from "../context/appContext.js";
 import { useParams } from "react-router-dom";
 import RingLoader from "react-spinners/RingLoader";
@@ -18,6 +17,7 @@ import {
   Zoom,
   Export,
 } from "@syncfusion/ej2-react-charts";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 const StockDetails = () => {
   const params = useParams();
@@ -34,12 +34,16 @@ const StockDetails = () => {
   const [lineChartCurrent, setLineChartCurrent] = useState([]);
   const [currentButton, setCurrentButton] = useState(0);
   const [myIntervalState, setmyIntervalState] = useState(0);
-  const { currentColor, authFetch, currentMode } = useAppContext();
+  const [watch, setWatch] = useState({});
+  const [isWatch, setIsWatch] = useState(false);
+  const [isWatchLoading, setIsWatchLoading] = useState(false);
+  const { currentColor, authFetch, currentMode, user } = useAppContext();
   useEffect(() => {
     const fetchDetails = async () => {
       await authFetch
         .post("stock/assetProfile", {
           symbol: params.sym,
+          isIndian: params.exc === "NSE" ? true : false,
         })
         .then((d) => {
           setAbout(d.data);
@@ -50,6 +54,7 @@ const StockDetails = () => {
       await authFetch
         .post("stock/priceChart", {
           symbol: params.sym,
+          isIndian: params.exc === "NSE" ? true : false,
         })
         .then((d) => {
           setDayPrice(d.data.dayPrice);
@@ -61,6 +66,21 @@ const StockDetails = () => {
         .catch((error) => {
           console.log(error);
         });
+      if (user !== null) {
+        await authFetch
+          .get(`stockWatch/getOne/${params.sym}`)
+          .then((d) => {
+            if (d.data.success) {
+              setIsWatch(true);
+              setWatch(d.data.watch);
+            } else {
+              setIsWatch(false);
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
       setLoading(false);
     };
     fetchDetails();
@@ -68,6 +88,9 @@ const StockDetails = () => {
       setCurrentButton((prev) => (prev + 1) % 4);
     }, 8000);
     setmyIntervalState(myInterval);
+    return () => {
+      clearInterval(myInterval);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
@@ -203,14 +226,89 @@ const StockDetails = () => {
     },
     rangePadding: "Additional",
   };
+  const handleWatch = async () => {
+    setIsWatchLoading(true);
+    try {
+      if (!isWatch) {
+        const { data } = await authFetch.post("stockWatch/add", {
+          stockName: params.name,
+          stockSymbol: params.sym,
+          exc: params.exc,
+        });
+        if (data.success) {
+          await authFetch
+            .get(`stockWatch/getOne/${params.sym}`)
+            .then((d) => {
+              if (d.data.success) {
+                setIsWatch(true);
+                setWatch(d.data.watch);
+              } else {
+                setIsWatch(false);
+                setWatch({});
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        }
+      } else {
+        const { data } = await authFetch.delete(
+          `stockWatch/delete/${watch._id}`
+        );
+        if (data.success) {
+          setIsWatch(false);
+          setIsWatchLoading(false);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      setIsWatchLoading(false);
+    }
+    setIsWatchLoading(false);
+  };
   let chartInstance;
   function clickHandler(e) {
     chartInstance.exportModule.export("PNG", `${params.name}`);
   }
   return (
-    <div className="m-2 md:m-10 mb-10 mt-24 md:mx-9 mx-2 p-2 md:p-6 dark:bg-secondary-dark-bg bg-white rounded-3xl text-center">
-      <div className="text-center w-full">
-        <Header title={params.name} />
+    <div>
+      <div className="text-center w-full relative">
+        <div className="mb-10 mt-5 w-full text-center">
+          <p
+            style={{ borderColor: currentColor }}
+            className="lg:text-3xl text-2xl m-auto pb-1 font-bold tracking-normal dark:text-white text-black border-solid border-b-2 lg:w-1/2 w-5/6"
+          >
+            {params.name}
+          </p>
+        </div>
+        {!loading && (
+          <div className="absolute -top-6 right-0 lg:m-2 m-2">
+            {user && (
+              <div>
+                {isWatchLoading ? (
+                  <RingLoader className="-ml-5" color={"red"} size={"30px"} />
+                ) : (
+                  <button onClick={handleWatch}>
+                    {isWatch && (
+                      <AiFillHeart
+                        size={"30px"}
+                        color="red"
+                        className="m-auto"
+                      />
+                    )}
+                    {!isWatch && (
+                      <AiOutlineHeart
+                        size={"30px"}
+                        color="red"
+                        className="m-auto"
+                      />
+                    )}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         {loading ? (
           <div className="w-full p-20">
             <div className="m-auto w-7">
@@ -221,18 +319,19 @@ const StockDetails = () => {
           <div className="flex flex-wrap">
             <div
               style={{ borderColor: currentColor, borderRadius: "10px" }}
-              className="flex flex-col gap-2 dark:text-white m-auto md:text-left p-4 font-semibold text-base md:text-xl border-l-2"
+              className="flex flex-col gap-2 dark:text-white m-auto md:text-left p-4 font-semibold text-base md:text-xl border-l-2 shadow-md dark:shadow-gray-600"
             >
               <p>
-                Current Price: {about.currentPrice ? about.currentPrice : "NA"}{" "}
-                &#8377;
+                Current Price: {about.currentPrice ? about?.currentPrice : "NA"}{" "}
+                {params.exc === "NSE" ? <>&#8377;</> : <>&#36;</>}
               </p>
               <p>
                 Target High: {about.targetHigh ? about.targetHigh : "NA"}{" "}
-                &#8377;
+                {params.exc === "NSE" ? <>&#8377;</> : <>&#36;</>}
               </p>
               <p>
-                Target Low: {about.targetLow ? about.targetLow : "NA"} &#8377;
+                Target Low: {about.targetLow ? about.targetLow : "NA"}{" "}
+                {params.exc === "NSE" ? <>&#8377;</> : <>&#36;</>}
               </p>
               <p>
                 Recommendation:{" "}
@@ -347,7 +446,7 @@ const StockDetails = () => {
                       xName="x"
                       yName="y"
                       width="3"
-                      marker={{ visible: true, width: 8, height: 8 }}
+                      marker={{ visible: true, width: 5, height: 5 }}
                       type="MultiColoredLine"
                       pointColorMapping="color"
                     />
