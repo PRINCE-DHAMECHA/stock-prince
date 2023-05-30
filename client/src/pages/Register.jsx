@@ -1,5 +1,5 @@
-import logoLight from "../utils/img/logoLight.jpg";
-import logoDark from "../utils/img/logoDark.jpg";
+import logoLight from "../utils/img/logolight.jpg";
+import logoDark from "../utils/img/logodark.jpg";
 import { useAppContext } from "../context/appContext";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";

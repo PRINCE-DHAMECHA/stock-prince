@@ -3,8 +3,8 @@ import { Link, NavLink } from "react-router-dom";
 import { RiCloseFill } from "react-icons/ri";
 import { links } from "../data/dummy";
 import { useAppContext } from "../context/appContext";
-import logoDark from "../utils/img/logoDark.jpg";
-import logo from "../utils/img/logoLight.jpg";
+import logoDark from "../utils/img/logodark.jpg";
+import logo from "../utils/img/logolight.jpg";
 
 const Sidebar = () => {
   const { activeMenu, setActiveMenu, screenSize, currentColor, currentMode } =
