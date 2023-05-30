@@ -184,7 +184,7 @@ export const MarketViewData = [
   {
     stockName: "Dhruvi StudyNotes",
     key: 2,
-    sector: "Education",
+    sector: "Study Materials",
   },
   {
     stockName: "Kanan Ielts",
