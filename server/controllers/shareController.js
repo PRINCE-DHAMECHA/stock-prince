@@ -19,7 +19,7 @@ const buy = async (req, res) => {
   if (!ownerName || !stockName || !price || !quantity) {
     throw new BadRequestError("Please Provide All Values!!");
   }
-  if (price <= 0 || quantity <= 0) {
+  if (price <= 0 || quantity <= 0 || quantity % 1 != 0) {
     throw new BadRequestError("Please Provide Valid Values!!");
   }
   try {
@@ -123,7 +123,7 @@ const sell = async (req, res) => {
     if (!ownerName || !stockName || !price || !quantity) {
       throw new BadRequestError("Please Provide All Values!!");
     }
-    if (price <= 0 || quantity <= 0) {
+    if (price <= 0 || quantity <= 0 || quantity % 1 != 0) {
       throw new BadRequestError("Please Provide Valid Values!!");
     }
     let user = await User.findOne({ name: ownerName });
