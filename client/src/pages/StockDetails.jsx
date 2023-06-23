@@ -40,46 +40,32 @@ const StockDetails = () => {
   const { currentColor, authFetch, currentMode, user } = useAppContext();
   useEffect(() => {
     const fetchDetails = async () => {
-      await authFetch
-        .post("stock/assetProfile", {
+      try {
+        let data = await authFetch.post("stock/assetProfile", {
           symbol: params.sym,
           isIndian: params.exc === "NSE" ? true : false,
-        })
-        .then((d) => {
-          setAbout(d.data);
-        })
-        .catch((error) => {
-          console.log(error);
         });
-      await authFetch
-        .post("stock/priceChart", {
+        setAbout(data.data);
+        data = await authFetch.post("stock/priceChart", {
           symbol: params.sym,
           isIndian: params.exc === "NSE" ? true : false,
-        })
-        .then((d) => {
-          setDayPrice(d.data.dayPrice);
-          setWeekPrice(d.data.weekPrice);
-          setMonthPrice(d.data.monthPrice);
-          setSixMonthPrice(d.data.sixMonthPrice);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.log(error);
         });
-      if (user !== null) {
-        await authFetch
-          .get(`stockWatch/getOne/${params.sym}`)
-          .then((d) => {
-            if (d.data.success) {
-              setIsWatch(true);
-              setWatch(d.data.watch);
-            } else {
-              setIsWatch(false);
-            }
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        setDayPrice(data.data.dayPrice);
+        setWeekPrice(data.data.weekPrice);
+        setMonthPrice(data.data.monthPrice);
+        setSixMonthPrice(data.data.sixMonthPrice);
+        setLoading(false);
+        if (user !== null) {
+          data = await authFetch.get(`stockWatch/getOne/${params.sym}`);
+          if (data.data.success) {
+            setIsWatch(true);
+            setWatch(data.data.watch);
+          } else {
+            setIsWatch(false);
+          }
+        }
+      } catch (e) {
+        console.log(e);
       }
       setLoading(false);
     };
@@ -235,21 +221,16 @@ const StockDetails = () => {
           stockSymbol: params.sym,
           exc: params.exc,
         });
+        console.log(data)
         if (data.success) {
-          await authFetch
-            .get(`stockWatch/getOne/${params.sym}`)
-            .then((d) => {
-              if (d.data.success) {
-                setIsWatch(true);
-                setWatch(d.data.watch);
-              } else {
-                setIsWatch(false);
-                setWatch({});
-              }
-            })
-            .catch((e) => {
-              console.log(e);
-            });
+          let data = await authFetch.get(`stockWatch/getOne/${params.sym}`);
+          if (data.data.success) {
+            setIsWatch(true);
+            setWatch(data.data.watch);
+          } else {
+            setIsWatch(false);
+            setWatch({});
+          }
         }
       } else {
         const { data } = await authFetch.delete(
@@ -257,12 +238,10 @@ const StockDetails = () => {
         );
         if (data.success) {
           setIsWatch(false);
-          setIsWatchLoading(false);
         }
       }
     } catch (e) {
       console.log(e);
-      setIsWatchLoading(false);
     }
     setIsWatchLoading(false);
   };

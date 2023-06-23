@@ -13,29 +13,14 @@ const LoanDesk = () => {
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
-      await authFetch("share/getUser")
-        .then((data) => {
-          const array = data.data;
-          const obj = array[0];
-          setUser(obj);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      await authFetch("loan/getMyBorrowings")
-        .then((data) => {
-          setMyBorrowings(data.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      await authFetch("loan/getMyGivings")
-        .then((data) => {
-          setMyGivings(data.data);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      let data = await authFetch("share/getUser");
+      const array = data.data;
+      const obj = array[0];
+      setUser(obj);
+      data = await authFetch("loan/getMyBorrowings");
+      setMyBorrowings(data.data);
+      data = await authFetch("loan/getMyGivings");
+      setMyGivings(data.data);
       setLoading(false);
     };
     fetchData();
