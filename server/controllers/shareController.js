@@ -18,7 +18,12 @@ const buy = async (req, res) => {
   if (price <= 0 || quantity <= 0) {
     throw new BadRequestError("Please Provide Valid Values!!");
   }
-  const user = await User.findOne({ name: ownerName });
+  let user;
+  try {
+    user = await User.findOne({ name: ownerName });
+  } catch (error) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
   if (!user) {
     throw new UnAuthenticatedError("No User Found!!");
   }
@@ -26,87 +31,96 @@ const buy = async (req, res) => {
   let wallet = user["balance"];
   let brokerage = Math.min(0.0003 * quantity * price, 20);
   if (wallet < quantity * price + brokerage) {
-    throw new BadRequestError("Not Enough Balance In Your Demate Account!!");
+    throw new BadRequestError("Not Enough Balance In Your Demat Account!!");
   }
   let newWallet = parseFloat(wallet - price * quantity - brokerage);
   newWallet = newWallet.toFixed(2);
 
-  const test = await Share.findOne({ ownerName, stockName });
-  if (test) {
-    checkUser(req.user, test.createdBy);
-    price =
-      (parseFloat(test["price"]) * parseFloat(test["quantity"]) +
-        parseFloat(price) * parseFloat(quantity)) /
-      (parseFloat(test["quantity"]) + parseFloat(quantity));
-    quantity = Number(quantity) + Number(test["quantity"]);
-    const updateShare = await Share.findOneAndUpdate(
-      { ownerName, stockName },
-      { ownerName, stockName, price, quantity }
-    )
-      .then(async () => {
-        res.status(StatusCodes.OK);
-        const updateUser2 = await User.updateOne(
-          { name: ownerName },
-          {
-            balance: newWallet,
-          }
-        ).then(async (data) => {
-          const transaction = await Transaction.create({
-            giver: ownerName,
-            receiver: "Stock-Market",
-            amount: (tempPrice * tempQuantity + brokerage).toFixed(2),
-            transactionTime: new Date(),
-            isStockTransaction: true,
-            stockName: stockName,
-            price: tempPrice,
-            quantity: tempQuantity,
-            tax: brokerage,
-          }).then(() => {
-            res.json("Buy Success!!");
+  let test;
+  try {
+    test = await Share.findOne({ ownerName, stockName });
+  } catch (error) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
+  try {
+    if (test) {
+      checkUser(req.user, test.createdBy);
+      price =
+        (parseFloat(test["price"]) * parseFloat(test["quantity"]) +
+          parseFloat(price) * parseFloat(quantity)) /
+        (parseFloat(test["quantity"]) + parseFloat(quantity));
+      quantity = Number(quantity) + Number(test["quantity"]);
+      Share.findOneAndUpdate(
+        { ownerName, stockName },
+        { ownerName, stockName, price, quantity }
+      )
+        .then(async () => {
+          res.status(StatusCodes.OK);
+          User.updateOne(
+            { name: ownerName },
+            {
+              balance: newWallet,
+            }
+          ).then(async (data) => {
+            Transaction.create({
+              giver: ownerName,
+              receiver: "Stock-Market",
+              amount: (tempPrice * tempQuantity + brokerage).toFixed(2),
+              transactionTime: new Date(),
+              isStockTransaction: true,
+              stockName: stockName,
+              price: tempPrice,
+              quantity: tempQuantity,
+              tax: brokerage,
+            }).then(() => {
+              res.json("Buy Success!!");
+            });
           });
+        })
+        .catch(() => {
+          throw new BadRequestError("Something Went Wrong :(");
         });
+    } else {
+      price = parseFloat(price);
+      quantity = Number(quantity);
+      Share.create({
+        ownerName,
+        stockName,
+        price,
+        quantity,
+        createdBy,
+        buyTime: new Date(),
+        tax: brokerage,
       })
-      .catch(() => {
-        throw new BadRequestError("Something Went Wrong :(");
-      });
-  } else {
-    price = parseFloat(price);
-    quantity = Number(quantity);
-    const newShare = await Share.create({
-      ownerName,
-      stockName,
-      price,
-      quantity,
-      createdBy,
-      buyTime: new Date(),
-      tax: brokerage,
-    })
-      .then(async (newShare) => {
-        res.status(StatusCodes.OK);
-        const updateUser2 = await User.updateOne(
-          { name: ownerName },
-          {
-            balance: newWallet,
-          }
-        ).then(async (data) => {
-          const transaction = await Transaction.create({
-            giver: ownerName,
-            receiver: "Stock-Market",
-            amount: (tempPrice * tempQuantity + brokerage).toFixed(2),
-            transactionTime: new Date(),
-            isStockTransaction: true,
-            stockName: stockName,
-            price: tempPrice,
-            quantity: tempQuantity,
-            tax: brokerage,
-          }).then(() => {
-            res.json("Buy Success!!");
+        .then(async (newShare) => {
+          res.status(StatusCodes.OK);
+          User.updateOne(
+            { name: ownerName },
+            {
+              balance: newWallet,
+            }
+          ).then(async (data) => {
+            Transaction.create({
+              giver: ownerName,
+              receiver: "Stock-Market",
+              amount: (tempPrice * tempQuantity + brokerage).toFixed(2),
+              transactionTime: new Date(),
+              isStockTransaction: true,
+              stockName: stockName,
+              price: tempPrice,
+              quantity: tempQuantity,
+              tax: brokerage,
+            }).then(() => {
+              res.json("Buy Success!!");
+            });
           });
+        })
+        .catch((e) => {
+          throw new BadRequestError("Something Went Wrong :(");
         });
-      })
-      .catch((e) => {
-        throw new BadRequestError("Something Went Wrong :(");
-      });
+    }
+  } catch (error) {
+    throw new BadRequestError("Something Went Wrong :(");
   }
 };
 const sell = async (req, res) => {
@@ -122,12 +136,22 @@ const sell = async (req, res) => {
   if (price <= 0 || quantity <= 0) {
     throw new BadRequestError("Please Provide Valid Values!!");
   }
-  const user = await User.findOne({ name: ownerName });
+  let user;
+  try {
+    user = await User.findOne({ name: ownerName });
+  } catch (error) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
   if (!user) {
     throw new UnAuthenticatedError("No User Found!!");
   }
   checkUser(req.user, user._id);
-  const test = await Share.findOne({ ownerName, stockName });
+  let test;
+  try {
+    test = await Share.findOne({ ownerName, stockName });
+  } catch (error) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
   if (test) {
     checkUser(req.user, test.createdBy);
     if (Number(test["quantity"]) < Number(quantity)) {
@@ -139,7 +163,7 @@ const sell = async (req, res) => {
     const sellPrice = price;
     price = Number(test["price"]);
     if (quantity <= 0) {
-      const removeShare = await Share.findOneAndRemove({
+      Share.findOneAndRemove({
         ownerName,
         stockName,
       })
@@ -149,13 +173,13 @@ const sell = async (req, res) => {
             user["balance"] + sellPrice * quantity - DP_Charges
           );
           newWallet = newWallet.toFixed(2);
-          const updateUser2 = await User.updateOne(
+          User.updateOne(
             { name: ownerName },
             {
               balance: newWallet,
             }
           ).then(async (data) => {
-            const transaction = await Transaction.create({
+            Transaction.create({
               giver: "Stock-Market",
               receiver: ownerName,
               amount: (sellPrice * quantity - DP_Charges).toFixed(2),
@@ -174,7 +198,7 @@ const sell = async (req, res) => {
           throw new BadRequestError("Something Went Wrong :(");
         });
     } else {
-      const updateShare = await Share.findOneAndUpdate(
+      Share.findOneAndUpdate(
         { ownerName, stockName },
         { ownerName, stockName, price, quantity }
       )
@@ -184,13 +208,13 @@ const sell = async (req, res) => {
             user["balance"] + sellPrice * quantity - DP_Charges
           );
           newWallet = newWallet.toFixed(2);
-          const updateUser2 = await User.updateOne(
+          User.updateOne(
             { name: ownerName },
             {
               balance: newWallet,
             }
           ).then(async (data) => {
-            const transaction = await Transaction.create({
+            Transaction.create({
               giver: "Stock-Market",
               receiver: ownerName,
               amount: sellPrice * quantity - DP_Charges,
@@ -218,7 +242,7 @@ const getShare = async (req, res) => {
   const queryObject = {
     createdBy: req.user.userId,
   };
-  const shares = await Share.find(queryObject)
+  Share.find(queryObject)
     .then((shares) => {
       res.status(StatusCodes.OK).json(shares);
     })

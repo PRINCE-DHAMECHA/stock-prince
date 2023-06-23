@@ -21,11 +21,11 @@ const pay = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.user.userId });
     const newBalance = Number(user.balance) - 100;
-    const newUser = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
       { _id: req.user.userId },
       { balance: newBalance }
     );
-    const transaction = await Transaction.create({
+    await Transaction.create({
       giver: user.name,
       receiver: "Tip Account",
       amount: 100,

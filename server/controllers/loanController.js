@@ -34,25 +34,25 @@ const repayLoan = async (req, res) => {
   if (!_id) {
     throw new BadRequestError("Please Provide All Values!!");
   }
-  const loan = await Loan.findOne({ _id });
-  if (!loan) {
-    throw new BadRequestError("Loan No Longer Available");
-  }
-  const borrower = await User.findOne({ name: loan.borrower });
-  const user = await User.findOne({ _id: req.user.userId });
-  checkUser(req.user, borrower._id);
-  const lender = await User.findOne({ name: loan.lender });
-
-  if (borrower.name === lender.name) {
-    throw new BadRequestError("You Can't Repay This Loan!!");
-  }
-  if (borrower.balance < outstanding) {
-    throw new BadRequestError(
-      "You Don't Have Sufficient Money To Repay This Loan"
-    );
-  }
-
   try {
+    const loan = await Loan.findOne({ _id });
+    if (!loan) {
+      throw new BadRequestError("Loan No Longer Available");
+    }
+    const borrower = await User.findOne({ name: loan.borrower });
+    const user = await User.findOne({ _id: req.user.userId });
+    checkUser(req.user, borrower._id);
+    const lender = await User.findOne({ name: loan.lender });
+
+    if (borrower.name === lender.name) {
+      throw new BadRequestError("You Can't Repay This Loan!!");
+    }
+    if (borrower.balance < outstanding) {
+      throw new BadRequestError(
+        "You Don't Have Sufficient Money To Repay This Loan"
+      );
+    }
+
     const newLender = await User.updateOne(
       { name: lender.name },
       {
@@ -89,23 +89,23 @@ const grantLoan = async (req, res) => {
   if (!_id) {
     throw new BadRequestError("Please Provide All Values!!");
   }
-  const borrower = await User.findOne({ _id: req.user.userId });
-  const note = await giversNote.findOne({ _id });
-  if (!note) {
-    throw new BadRequestError("Loan No Longer Available");
-  }
-  const lender = await User.findOne({ _id: note.createdBy });
-
-  if (borrower.name === lender.name) {
-    throw new BadRequestError("You Can't Give Yourself A Loan!!");
-  }
-  let processingFees = (note.principal * 0.005).toFixed(2);
-  if (lender.balance < note.principal) {
-    throw new BadRequestError(
-      "Lender Currently Does Not Have Sufficient Amount Of Money :("
-    );
-  }
   try {
+    const borrower = await User.findOne({ _id: req.user.userId });
+    const note = await giversNote.findOne({ _id });
+    if (!note) {
+      throw new BadRequestError("Loan No Longer Available");
+    }
+    const lender = await User.findOne({ _id: note.createdBy });
+
+    if (borrower.name === lender.name) {
+      throw new BadRequestError("You Can't Give Yourself A Loan!!");
+    }
+    let processingFees = (note.principal * 0.005).toFixed(2);
+    if (lender.balance < note.principal) {
+      throw new BadRequestError(
+        "Lender Currently Does Not Have Sufficient Amount Of Money :("
+      );
+    }
     const newLender = await User.updateOne(
       { name: lender.name },
       {
@@ -193,10 +193,6 @@ const deleteMynote = async (req, res) => {
   try {
     const note = await giversNote.findOne({ _id });
     checkUser(req.user, note.createdBy);
-  } catch (e) {
-    throw new BadRequestError("Something Went Wrong!!");
-  }
-  try {
     const noteRemoved = await giversNote.findByIdAndRemove({ _id });
     res.status(StatusCodes.ACCEPTED).json("Note Deleted Successfully");
   } catch (e) {

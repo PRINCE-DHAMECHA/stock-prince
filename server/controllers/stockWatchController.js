@@ -48,7 +48,6 @@ const removeWatch = async (req, res) => {
           .status(StatusCodes.BAD_REQUEST)
           .json({ error: "Stock not found in the stock watch" });
       } else {
-        // Remove the stock from the stocks array
         stockWatch.stocks.splice(stockIndex, 1);
         const updatedStockWatch = await stockWatch.save();
         res
