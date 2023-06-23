@@ -2,6 +2,7 @@ import News from "../models/News.js";
 import { StatusCodes } from "http-status-codes";
 import axios from "axios";
 import BadRequestError from "../errors/bad-request.js";
+import InternalServerError from "../errors/server-error.js";
 
 const fetchNews = async (req, res) => {
   let arr = [];
@@ -115,7 +116,7 @@ const fetchNews = async (req, res) => {
     let resNews = await News.create({ newsArr: arr, createDate: new Date() });
     res.status(StatusCodes.ACCEPTED).json({ success: true, resNews });
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 

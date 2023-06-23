@@ -1,9 +1,12 @@
 import axios from "axios";
 import User from "../models/User.js";
 import { StatusCodes } from "http-status-codes";
-import mongoose from "mongoose";
 import Transaction from "../models/Transaction.js";
-import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
+import {
+  BadRequestError,
+  InternalServerError,
+  UnAuthenticatedError,
+} from "../errors/index.js";
 
 const getTransactions = async (req, res) => {
   try {
@@ -13,7 +16,7 @@ const getTransactions = async (req, res) => {
     });
     res.json(transaction);
   } catch (error) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
@@ -33,7 +36,7 @@ const pay = async (req, res) => {
     });
     res.status(StatusCodes.OK).json("Payment Done!!");
   } catch (error) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 

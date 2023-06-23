@@ -3,7 +3,11 @@ import Loan from "../models/Loan.js";
 import Transaction from "../models/Transaction.js";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/User.js";
-import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
+import {
+  BadRequestError,
+  InternalServerError,
+  UnAuthenticatedError,
+} from "../errors/index.js";
 import checkUser from "../Utils/checkUser.js";
 
 const createNote = async (req, res) => {
@@ -25,19 +29,23 @@ const createNote = async (req, res) => {
       user1,
     });
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    if (e instanceof BadRequestError) {
+      throw new BadRequestError(e.message);
+    } else {
+      throw new InternalServerError("Something Went Wrong!!");
+    }
   }
 };
 
 const repayLoan = async (req, res) => {
   const { _id, outstanding, principal, interest } = req.body;
-  if (!_id) {
-    throw new BadRequestError("Please Provide All Values!!");
-  }
   try {
+    if (!_id) {
+      throw new BadRequestError("Please Provide All Values!!");
+    }
     const loan = await Loan.findOne({ _id });
     if (!loan) {
-      throw new BadRequestError("Loan No Longer Available");
+      throw new BadRequestError("Loan Repaid!!");
     }
     const borrower = await User.findOne({ name: loan.borrower });
     const user = await User.findOne({ _id: req.user.userId });
@@ -49,25 +57,25 @@ const repayLoan = async (req, res) => {
     }
     if (borrower.balance < outstanding) {
       throw new BadRequestError(
-        "You Don't Have Sufficient Money To Repay This Loan"
+        "You Don't Have Sufficient Money To Repay This Loan!!"
       );
     }
 
-    const newLender = await User.updateOne(
+    await User.updateOne(
       { name: lender.name },
       {
         balance: lender.balance + Number(outstanding),
         givings: lender.givings - loan.principal,
       }
     );
-    const newBorrower = await User.updateOne(
+    await User.updateOne(
       { name: borrower.name },
       {
         balance: borrower.balance - Number(outstanding),
         borrowings: borrower.borrowings - loan.principal,
       }
     );
-    const transaction = await Transaction.create({
+    await Transaction.create({
       giver: borrower.name,
       receiver: lender.name,
       amount: outstanding,
@@ -77,19 +85,23 @@ const repayLoan = async (req, res) => {
       interest: interest,
       isRepay: true,
     });
-    const noteRemoved = await Loan.findByIdAndRemove({ _id });
+    await Loan.findByIdAndRemove({ _id });
     res.status(StatusCodes.ACCEPTED).json("Success");
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    if (e instanceof BadRequestError) {
+      throw new BadRequestError(e.message);
+    } else {
+      throw new InternalServerError("Something Went Wrong!!");
+    }
   }
 };
 
 const grantLoan = async (req, res) => {
   const { _id } = req.body;
-  if (!_id) {
-    throw new BadRequestError("Please Provide All Values!!");
-  }
   try {
+    if (!_id) {
+      throw new BadRequestError("Please Provide All Values!!");
+    }
     const borrower = await User.findOne({ _id: req.user.userId });
     const note = await giversNote.findOne({ _id });
     if (!note) {
@@ -103,7 +115,7 @@ const grantLoan = async (req, res) => {
     let processingFees = (note.principal * 0.005).toFixed(2);
     if (lender.balance < note.principal) {
       throw new BadRequestError(
-        "Lender Currently Does Not Have Sufficient Amount Of Money :("
+        "Lender Currently Does Not Have Sufficient Amount Of Money!!"
       );
     }
     const newLender = await User.updateOne(
@@ -140,10 +152,12 @@ const grantLoan = async (req, res) => {
     });
     const noteRemoved = await giversNote.findByIdAndRemove({ _id });
     res.status(StatusCodes.ACCEPTED).json(transaction);
-  } catch {
-    (e) => {
-      throw new BadRequestError("Something Went Wrong :(");
-    };
+  } catch (e) {
+    if (e instanceof BadRequestError) {
+      throw new BadRequestError(e.message);
+    } else {
+      throw new InternalServerError("Something Went Wrong :(");
+    }
   }
 };
 
@@ -153,7 +167,7 @@ const getMyGivings = async (req, res) => {
     const loans = await Loan.find({ lender: lender.name });
     res.status(StatusCodes.ACCEPTED).json(loans);
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
@@ -163,14 +177,14 @@ const getMyBorrowings = async (req, res) => {
     const loans = await Loan.find({ borrower: borrower.name });
     res.status(StatusCodes.ACCEPTED).json(loans);
   } catch (err) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
 const getNotes = async (req, res) => {
   giversNote.find((err, data) => {
     if (err) {
-      throw new BadRequestError("Something Went Wrong :(");
+      throw new InternalServerError("Something Went Wrong :(");
     }
     res.status(StatusCodes.OK).json(data);
   });
@@ -182,7 +196,7 @@ const getMyNotes = async (req, res) => {
   };
   giversNote.find(queryObject, (err, data) => {
     if (err) {
-      throw new BadRequestError("Something Went Wrong :(");
+      throw new InternalServerError("Something Went Wrong :(");
     }
     res.status(StatusCodes.OK).json(data);
   });
@@ -193,10 +207,14 @@ const deleteMynote = async (req, res) => {
   try {
     const note = await giversNote.findOne({ _id });
     checkUser(req.user, note.createdBy);
+  } catch (e) {
+    throw new InternalServerError("Something Went Wrong :(");
+  }
+  try {
     const noteRemoved = await giversNote.findByIdAndRemove({ _id });
     res.status(StatusCodes.ACCEPTED).json("Note Deleted Successfully");
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong!!");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 

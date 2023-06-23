@@ -1,7 +1,7 @@
 import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 import StockWatch from "../models/stockWatch.js";
-import { BadRequestError } from "../errors/index.js";
+import { InternalServerError } from "../errors/index.js";
 import User from "../models/User.js";
 
 const addWatch = async (req, res) => {
@@ -28,7 +28,7 @@ const addWatch = async (req, res) => {
     }
     res.status(StatusCodes.ACCEPTED).json({ success: true });
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
@@ -56,7 +56,7 @@ const removeWatch = async (req, res) => {
       }
     }
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
@@ -89,7 +89,7 @@ const getWatches = async (req, res) => {
     }
     res.status(StatusCodes.ACCEPTED).json({ watches: allWatch });
   } catch (e) {
-    res.status(StatusCodes.BAD_REQUEST).json({ success: false });
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
@@ -113,7 +113,7 @@ const getOneWatch = async (req, res) => {
       }
     }
   } catch (e) {
-    throw new BadRequestError("Something Went Wrong :(");
+    throw new InternalServerError("Something Went Wrong :(");
   }
 };
 
