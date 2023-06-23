@@ -221,7 +221,6 @@ const StockDetails = () => {
           stockSymbol: params.sym,
           exc: params.exc,
         });
-        console.log(data)
         if (data.success) {
           let data = await authFetch.get(`stockWatch/getOne/${params.sym}`);
           if (data.data.success) {
