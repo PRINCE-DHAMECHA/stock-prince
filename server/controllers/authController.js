@@ -11,15 +11,24 @@ const register = async (req, res) => {
   if (password.length <= 5) {
     throw new BadRequestError("Password Must Be at least 6 Characters Long");
   }
+  let userAlreadyExists;
   try {
-    const userAlreadyExists = await User.findOne({ email });
-    if (userAlreadyExists) {
-      throw new UnAuthenticatedError("Email Already Exist");
-    }
-    const userAlreadyExists2 = await User.findOne({ name });
-    if (userAlreadyExists2) {
-      throw new UnAuthenticatedError("Username Already Taken");
-    }
+    userAlreadyExists = await User.findOne({ email });
+  } catch (e) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
+  if (userAlreadyExists) {
+    throw new UnAuthenticatedError("Email Already Exist");
+  }
+  try {
+    userAlreadyExists = await User.findOne({ name });
+  } catch (e) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
+  if (userAlreadyExists) {
+    throw new UnAuthenticatedError("Username Already Taken");
+  }
+  try {
     const user = await User.create({ name, email, password });
     const token = user.createJWT();
     res.status(StatusCodes.CREATED).json({
@@ -35,16 +44,25 @@ const login = async (req, res) => {
   if (!email || !password) {
     throw new BadRequestError("Please provide all values");
   }
+  let user;
   try {
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      throw new UnAuthenticatedError("Email Does Not Exist");
-    }
-
-    const isPasswordCorrect = await user.comparePassword(password);
-    if (!isPasswordCorrect) {
-      throw new UnAuthenticatedError("Invalid Credentials");
-    }
+    user = await User.findOne({ email }).select("+password");
+  } catch (e) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
+  if (!user) {
+    throw new UnAuthenticatedError("Email Does Not Exist");
+  }
+  let isPasswordCorrect;
+  try {
+    isPasswordCorrect = await user.comparePassword(password);
+  } catch (e) {
+    throw new BadRequestError("Something Went Wrong :(");
+  }
+  if (!isPasswordCorrect) {
+    throw new UnAuthenticatedError("Invalid Credentials");
+  }
+  try {
     const token = user.createJWT();
     user.password = undefined;
     res.status(StatusCodes.OK).json({ user, token });
