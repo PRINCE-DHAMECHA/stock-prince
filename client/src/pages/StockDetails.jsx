@@ -108,10 +108,10 @@ const StockDetails = () => {
   useEffect(() => {
     setLoading(true);
     let arr = [];
-    for (let i = 0; i < dayPrice.length; i++) {
+    for (let i = 0; i < dayPrice??.length; i++) {
       let date = new Date(dayPrice[i].date);
       let color = "#00b700";
-      if (i < dayPrice.length - 1) {
+      if (i < dayPrice??.length - 1) {
         if (Number(dayPrice[i + 1].price) < Number(dayPrice[i].price)) {
           color = "#ff4040";
         }
@@ -128,12 +128,12 @@ const StockDetails = () => {
     setLineChartDay(arr);
     setLineChartCurrent(arr);
     arr = [];
-    for (let i = 0; i < weekPrice.length; i++) {
+    for (let i = 0; i < weekPrice??.length; i++) {
       let date = new Date(weekPrice[i].date);
       let dd = date.getDate();
       if (dd < 10) dd = "0" + dd;
       let color = "#00b700";
-      if (i < weekPrice.length - 1) {
+      if (i < weekPrice??.length - 1) {
         if (Number(weekPrice[i + 1].price) < Number(weekPrice[i].price)) {
           color = "#ff4040";
         }
@@ -147,12 +147,12 @@ const StockDetails = () => {
     }
     setLineChartWeek(arr);
     arr = [];
-    for (let i = 0; i < monthPrice.length; i++) {
+    for (let i = 0; i < monthPrice??.length; i++) {
       let date = new Date(monthPrice[i].date);
       let dd = date.getDate();
       if (dd < 10) dd = "0" + dd;
       let color = "#00b700";
-      if (i < monthPrice.length - 1) {
+      if (i < monthPrice??.length - 1) {
         if (Number(monthPrice[i + 1].price) < Number(monthPrice[i].price)) {
           color = "#ff4040";
         }
@@ -166,12 +166,12 @@ const StockDetails = () => {
     }
     setLineChartMonth(arr);
     arr = [];
-    for (let i = 0; i < sixMonthPrice.length; i++) {
+    for (let i = 0; i < sixMonthPrice??.length; i++) {
       let date = new Date(sixMonthPrice[i].date);
       let dd = date.getDate();
       if (dd < 10) dd = "0" + dd;
       let color = "#00b700";
-      if (i < sixMonthPrice.length - 1) {
+      if (i < sixMonthPrice??.length - 1) {
         if (
           Number(sixMonthPrice[i + 1].price) < Number(sixMonthPrice[i].price)
         ) {
