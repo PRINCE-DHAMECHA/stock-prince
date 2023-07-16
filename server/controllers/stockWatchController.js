@@ -70,7 +70,7 @@ const getWatches = async (req, res) => {
       let obj = {};
       await axios
         .get(
-          `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${
+          `https://query1.finance.yahoo.com/v6/finance/quoteSummary/${
             i.symbol
           }${i.exc === "NSE" ? ".ns" : ""}?modules=financialData`
         )
