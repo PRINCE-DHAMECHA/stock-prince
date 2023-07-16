@@ -6,7 +6,7 @@ const assetProfile = async (req, res) => {
   let obj = {};
   try {
     let data = await axios.get(
-      `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}${
+      `https://query1.finance.yahoo.com/v6/finance/quoteSummary/${symbol}${
         isIndian ? ".ns" : ""
       }?modules=assetProfile`
     );
@@ -17,7 +17,7 @@ const assetProfile = async (req, res) => {
     obj.about = data?.longBusinessSummary;
     obj.employeesCount = data?.fullTimeEmployees;
     data = await axios.get(
-      `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}${
+      `https://query1.finance.yahoo.com/v6/finance/quoteSummary/${symbol}${
         isIndian ? ".ns" : ""
       }?modules=financialData`
     );
