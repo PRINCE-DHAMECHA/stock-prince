@@ -56,5 +56,5 @@ Overall, Stock-Prince aims to reduce the barrier to entry for new investors and 
 4. You are ready to run your project.
 
 #### Visit live project Here : https://stock-prince.netlify.app
-
+http://stock-prince.tk
 
