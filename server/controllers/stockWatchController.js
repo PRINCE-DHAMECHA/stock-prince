@@ -67,27 +67,31 @@ const getWatches = async (req, res) => {
     const watches = userWatch.stocks;
     let allWatch = [];
     for (let i of watches) {
+      let flag = true;
       let obj = {};
-      await axios
-        .get(
-          `https://query1.finance.yahoo.com/v6/finance/quoteSummary/${
-            i.symbol
-          }${i.exc === "NSE" ? ".ns" : ""}?modules=financialData`
-        )
-        .then((d) => {
-          let data = d?.data?.quoteSummary?.result[0]?.financialData;
-          obj.currentPrice = data?.currentPrice?.fmt;
-          obj.targetHigh = data?.targetHighPrice?.fmt;
-          obj.name = i.name;
-          obj.symbol = i.symbol;
-          obj.exc = i.exc;
-          allWatch.push(obj);
-        })
-        .catch((e) => {
-          res.status(StatusCodes.BAD_REQUEST).json({ success: false });
-        });
+      if (flag) {
+        await axios
+          .get(
+            `https://query1.finance.yahoo.com/v6/finance/quoteSummary/${
+              i.symbol
+            }${i.exc === "NSE" ? ".ns" : ""}?modules=financialData`
+          )
+          .then((d) => {
+            let data = d?.data?.quoteSummary?.result[0]?.financialData;
+            obj.currentPrice = data?.currentPrice?.fmt;
+            obj.targetHigh = data?.targetHighPrice?.fmt;
+            obj.name = i.name;
+            obj.symbol = i.symbol;
+            obj.exc = i.exc;
+            allWatch.push(obj);
+          });
+      } else {
+        break;
+      }
     }
-    res.status(StatusCodes.ACCEPTED).json({ watches: allWatch });
+    if (!flag) {
+      res.status(StatusCodes.ACCEPTED).json({ watches: allWatch });
+    }
   } catch (e) {
     throw new InternalServerError("Something Went Wrong :(");
   }
