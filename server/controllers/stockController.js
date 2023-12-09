@@ -26,9 +26,7 @@ const assetProfile = async (req, res) => {
     obj.targetHigh = data?.targetHighPrice?.fmt;
     obj.targetLow = data?.targetLowPrice?.fmt;
     obj.recommendation = data?.recommendationKey;
-  } catch (e) {
-    console.log(e);
-  }
+  } catch (e) {}
   res.json(obj);
 };
 
@@ -104,9 +102,7 @@ const priceChart = async (req, res) => {
       arr.push(temp);
     }
     obj.dayPrice = arr;
-  } catch (e) {
-    console.log(e);
-  }
+  } catch (e) {}
   res.json(obj);
 };
 export { assetProfile, priceChart };
